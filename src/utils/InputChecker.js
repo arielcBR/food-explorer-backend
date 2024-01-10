@@ -1,8 +1,6 @@
 class InputChecker{
-    name(name){
-        if(!name)
-            return false;
-        if(name.length < 2 || name.length > 20)
+    text(text){
+        if(!text)
             return false;
         return true;
     }
@@ -15,6 +13,20 @@ class InputChecker{
     password(password) {
         const re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
         return re.test(password);
+    }
+
+    price(price){
+        if(isNaN(price)){
+            console.error('Price is not a number');
+            return false;
+        }
+
+        if(price < 0){
+            console.error('Price is a negative value');
+            return false;
+        }
+
+        return true;
     }
 }
 

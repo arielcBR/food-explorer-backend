@@ -7,16 +7,16 @@ class UserCreate{
         this.userRepository = userRepository;
     }
 
-    async execute({name, email, password}){
-        const nameIsValid = InputChecker.name(name);
-        const emailIsValid = InputChecker.email(email);
-        const passwordIsValid = InputChecker.password(password);
+    async execute({name, email, password, isAdmin = false}){
+        const isNameValid = InputChecker.text(name);
+        const isEmailValid = InputChecker.email(email);
+        const isPasswordValid = InputChecker.password(password);
 
-        if(!nameIsValid)
+        if(!isNameValid)
             throw new AppError('The name is not valid!');
-        else if(!emailIsValid)
+        if(!isEmailValid)
             throw new AppError('The email is not valid!');
-        else if(!passwordIsValid)
+        if(!isPasswordValid)
             throw new AppError('The password does not fit the pattern, try another one!');
 
         const doesUserExist = await this.userRepository.findByEmail(email);
@@ -28,7 +28,8 @@ class UserCreate{
         const userCreated = await this.userRepository.create({
             name: name.toLowerCase(),
             password: hashedPassword,
-            email: email
+            email: email,
+            isAdmin: isAdmin
         });
 
         return userCreated;
