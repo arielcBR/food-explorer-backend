@@ -10,6 +10,12 @@ module.exports = {
       extension: 'js',
       directory: path.resolve(__dirname, 'src', 'database', 'knex', 'migrations')
     },
+    seeds:{
+      directory: path.resolve(__dirname, 'src', 'database', 'knex', 'seeds')
+    },
+    pool: {
+      afterCreate: (conn, cb) => conn.run("PRAGMA foreign_keys = ON", cb)
+    },
     useNullAsDefault: true
   }
 };

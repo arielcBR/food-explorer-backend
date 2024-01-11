@@ -18,7 +18,7 @@ class DishRepository{
 
             // If it does not exist, then add the new ingredient to the DB
             if (!ingredientExists) {
-                const [newIngredientId] = await knex('ingredients').insert({ name: ingredient });
+                const [newIngredientId] = await knex('ingredients').insert({ name: ingredient.toLowerCase() });
                 
                 await knex('dish_ingredients').insert({
                     dish_id: dishId, 
@@ -36,6 +36,21 @@ class DishRepository{
         }
 
         return;
+    }
+
+    async getAllDishes(){
+        const dishes = await knex('dishes').select();
+        return dishes;
+    }
+
+    async getDish(id){
+        const dish = await knex('dishes').select().where({id: id});
+        return dish;
+    }
+
+    async deleteDish(id){
+        const dish = await knex('dishes').delete().where({id: id});
+        return dish;
     }
 }
 

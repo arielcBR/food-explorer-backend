@@ -14,6 +14,11 @@ const adminRoutes = Router();
 const upload = multer(uploadConfig.MULTER);
 
 // Routes
-adminRoutes.post('/dish', ensureAuthentication, ensureIsAdmin, upload.any(), adminController.createDish);
+adminRoutes.post('/dish', ensureAuthentication, ensureIsAdmin, upload.any(), adminController.create);
+adminRoutes.delete('/dish/:dishId', ensureAuthentication, ensureIsAdmin, adminController.delete);
+adminRoutes.get('/dish', ensureAuthentication, adminController.getAll);
+adminRoutes.get('/dish/:dishId', ensureAuthentication, adminController.get);
+adminRoutes.patch('/dish/:dishId', ensureAuthentication, ensureIsAdmin, upload.any(), adminController.update);
+
 
 module.exports = adminRoutes;

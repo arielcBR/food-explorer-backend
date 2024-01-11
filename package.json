@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/server.js",
-    "migrations": "knex migrate:latest"
+    "migrations": "knex migrate:latest",
+    "seeds": "knex seed:run"
   },
   "repository": {
     "type": "git",

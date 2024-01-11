@@ -6,7 +6,7 @@ class DishCreate{
         this.dishRepository = dishRepository;
     }
 
-    async execute({name, category, price, description, ingredients, picturePath}){
+    async create({name, category, price, description, ingredients, picturePath}){
         const isNameValid = InputChecker.text(name);
         const isPriceValid = InputChecker.price(price);
         const isDescriptionValid = InputChecker.text(description);
@@ -19,15 +19,39 @@ class DishCreate{
             throw new AppError('The description is not valid!');
 
         const dishCreated = await this.dishRepository.createDish({
-            name, 
-            category,
+            name: name.toLowerCase(), 
+            category: category.toLowerCase(),
             price, 
-            description, 
+            description: description.toLowerCase(), 
             ingredients,
             picture: picturePath
         });
         
         return dishCreated;
+
+    }
+
+    async getAll(){
+        const dishes = await this.dishRepository.getAllDishes();
+        return dishes;
+    }
+
+    async get(id){
+        const [dish] = await this.dishRepository.getDish(id);
+        return dish;
+    }
+
+    async delete(id){
+        const dish = await this.get(id);
+
+        if(!dish)
+            return false;
+
+        else{
+            const status = await this.dishRepository.deleteDish(id);
+            
+            return true;
+        }
 
     }
 }
