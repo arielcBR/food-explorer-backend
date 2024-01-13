@@ -52,6 +52,25 @@ class DishRepository{
         const dish = await knex('dishes').delete().where({id: id});
         return dish;
     }
+
+    async updateDish({id, name, category, price, description, picture}){
+        await knex('dishes').update({name, category, price, description, picture}).where({id: id});
+        return; 
+    }
+
+    async getDishIngredients(id){
+        const ingredients = await knex('dish_ingredients')
+            .where({ dish_id: id })
+            .join('ingredients', 'dish_ingredients.ingredient_id', 'ingredients.id')
+            .select('ingredients.id', 'ingredients.name');
+
+        return ingredients;
+    }
+
+    async deleteDishIngredients(id){
+        await knex('dish_ingredients').delete().where({ingredient_id: id});
+        return;
+    }
 }
 
 module.exports = DishRepository;

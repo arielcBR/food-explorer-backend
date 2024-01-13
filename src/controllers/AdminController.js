@@ -1,5 +1,6 @@
 const DishRepository = require('../repositories/DishRepository');
 const DishCreateService = require('../services/DishCreate');
+const AppError = require('../utils/AppError');
 
 class AdminController{
 
@@ -65,15 +66,39 @@ class AdminController{
         try{
             const { dishId } =  req.params;
             const [ dishPicture ] = req.files;
-            const dish  = JSON.parse(req.body.bodyDish);
+            const { bodyDish } = req.body;
 
-            let picturePath = dishPicture.path;
+            const dishRepository = new DishRepository();
+            const dishCreateService = new DishCreateService(dishRepository);
 
-            console.log('dish id: ', dishId);
-            console.log(dishPicture.path);
+            let status;
+            
+            if (dishPicture && bodyDish) {
+                const patch = JSON.parse(bodyDish);
+                status = await dishCreateService.update(dishId, dishPicture, patch);
+            }
+
+            else if (!dishPicture && bodyDish) {
+                const patch = JSON.parse(bodyDish);
+                status = await dishCreateService.update(dishId, null, patch);
+            }
+
+            else if (dishPicture && !bodyDish) {
+                status = await dishCreateService.update(dishId, dishPicture, {});
+            }
+
+            else 
+                status = false;
 
 
-            res.json({})
+            if(!status){
+                res.status(400).json({message: 'The update could not be done!'});
+            }
+
+            else{
+                res.json({message: 'Dish updated!'});
+            }
+
         }
         catch (error) {
             console.error(error);

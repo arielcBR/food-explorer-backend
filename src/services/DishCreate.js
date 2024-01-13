@@ -54,6 +54,64 @@ class DishCreate{
         }
 
     }
+
+    async update(dishId, newDishPicture, dishUpdated){
+        const dish = await this.get(dishId);
+
+        // Dish not found
+        if(dish == undefined){
+            return false;
+        }
+
+        else{
+
+            if(newDishPicture)
+                dish.picture = newDishPicture.path;
+    
+            if(dishUpdated.name){
+                const isNewNameValid = InputChecker.text(dishUpdated.name);
+                if(isNewNameValid)
+                    dish.name = dishUpdated.name;
+            }
+    
+            if(dishUpdated.category){
+                const isNewCategoryValid = InputChecker.text(dishUpdated.category);
+                if(isNewCategoryValid)    
+                    dish.category = dishUpdated.category;
+            }
+    
+            if(dishUpdated.price){
+                const isNewPriceValid = InputChecker.price(dishUpdated.price);
+                if(isNewPriceValid)
+                    dish.price = dishUpdated.price;
+            }
+    
+            if(dishUpdated.description)
+                dish.description = dishUpdated.description;
+            
+            await this.dishRepository.updateDish(dish);
+            
+            if(dishUpdated.ingredients){
+                await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
+            }
+            
+        }
+
+        return true;
+    }
+
+    async updateDishIngredients(dishId, newIngredients){
+    
+        const ingredients = await this.dishRepository.getDishIngredients(dishId);
+        // console.log(ingredients);
+
+        for (const ingredient of ingredients) {
+            await this.dishRepository.deleteDishIngredients(ingredient.id);
+        }
+
+        await this.dishRepository.createDishIngredients(dishId, newIngredients);
+    }
+
 }
 
 module.exports = DishCreate;
