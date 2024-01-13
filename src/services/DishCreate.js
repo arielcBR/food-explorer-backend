@@ -36,8 +36,8 @@ class DishCreate{
         return dishes;
     }
 
-    async get(id){
-        const [dish] = await this.dishRepository.getDish(id);
+    async getById(id){
+        const [dish] = await this.dishRepository.getDishById(id);
         return dish;
     }
 
@@ -103,13 +103,18 @@ class DishCreate{
     async updateDishIngredients(dishId, newIngredients){
     
         const ingredients = await this.dishRepository.getDishIngredients(dishId);
-        // console.log(ingredients);
 
         for (const ingredient of ingredients) {
             await this.dishRepository.deleteDishIngredients(ingredient.id);
         }
 
         await this.dishRepository.createDishIngredients(dishId, newIngredients);
+    }
+
+    async searchDishes(dish){
+        const dishes = await this.dishRepository.searchDishes(dish);
+        
+        return dishes;
     }
 
 }

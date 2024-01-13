@@ -43,7 +43,7 @@ class DishRepository{
         return dishes;
     }
 
-    async getDish(id){
+    async getDishById(id){
         const dish = await knex('dishes').select().where({id: id});
         return dish;
     }
@@ -70,6 +70,11 @@ class DishRepository{
     async deleteDishIngredients(id){
         await knex('dish_ingredients').delete().where({ingredient_id: id});
         return;
+    }
+
+    async searchDishes(dish){
+        const dishes = await knex('dishes').where('name', 'like', `%${dish}%`);
+        return dishes;
     }
 }
 
