@@ -73,8 +73,17 @@ class DishRepository{
     }
 
     async searchDishes(dish){
-        const dishes = await knex('dishes').where('name', 'like', `%${dish}%`);
-        return dishes;
+        const dishesByName = await knex('dishes').where('name', 'like', `%${dish}%`);
+        
+        const dishesByIngredient = await knex('dishes')
+        .distinct('dishes.id', 'dishes.name', 'dishes.category', 'dishes.price', 'dishes.description', 'dishes.picture')
+        .join('dish_ingredients', 'dishes.id', 'dish_ingredients.dish_id')
+        .join('ingredients', 'dish_ingredients.ingredient_id', 'ingredients.id')
+        .where('ingredients.name', 'like', `%${dish}%`);
+
+        const allDishes = [...dishesByName, ...dishesByIngredient];
+
+        return allDishes;
     }
 }
 

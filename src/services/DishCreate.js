@@ -112,9 +112,16 @@ class DishCreate{
     }
 
     async searchDishes(dish){
-        const dishes = await this.dishRepository.searchDishes(dish);
+        const allDishes = await this.dishRepository.searchDishes(dish);
         
-        return dishes;
+        const uniqueDishes = allDishes.reduce((unique, dish) => {
+            if (!unique.some((uniqueDish) => uniqueDish.id === dish.id)) {
+                unique.push(dish);
+            }
+            return unique;
+        }, []);
+
+        return uniqueDishes;
     }
 
 }
