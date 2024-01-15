@@ -1,6 +1,5 @@
 const DishRepository = require('../repositories/DishRepository');
 const DishCreateService = require('../services/DishCreate');
-const AppError = require('../utils/AppError');
 
 class AdminController{
 
