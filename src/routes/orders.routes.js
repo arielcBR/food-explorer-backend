@@ -5,9 +5,9 @@ const orderRoutes = Router();
 const ensureAuthentication = require('../middlewares/ensureAuthentication');
 
 // Controllers
-const orderController = require('');
+const orderController = require('../controllers/OrderController');
 
-orderRoutes.post('/', ensureAuthentication, );
+orderRoutes.post('/', ensureAuthentication, orderController.create);
 
 
 module.exports = orderRoutes;

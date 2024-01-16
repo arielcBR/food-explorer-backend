@@ -82,6 +82,7 @@ class DishRepository{
         .where('ingredients.name', 'like', `%${dish}%`);
 
         const allDishes = [...dishesByName, ...dishesByIngredient];
+        console.log(allDishes);
 
         return allDishes;
     }
