@@ -7,6 +7,7 @@ class DishCreate{
     }
 
     async create({name, category, price, description, ingredients, picturePath}){
+
         const isNameValid = InputChecker.text(name);
         const isPriceValid = InputChecker.price(price);
         const isDescriptionValid = InputChecker.text(description);
@@ -28,7 +29,6 @@ class DishCreate{
         });
         
         return dishCreated;
-
     }
 
     async getAll(){
