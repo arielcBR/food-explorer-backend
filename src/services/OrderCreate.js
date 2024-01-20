@@ -1,12 +1,14 @@
 const DishRepository = require('../repositories/DishRepository');
-const OrderRepository = require('../repositories/OrderRepository');
 const UserRepository = require('../repositories/UserRepository');
 const DishCreateService = require('../services/DishCreate');
-const OrderCreateService = require('../services/OrderCreate');
 const UserCreateService = require('../services/UserCreate');
 const AppError = require("../utils/AppError");
 
+
+
 class OrderCreate{
+    status = ['canceled', 'pending', 'preparing', 'delivering', 'finished'];
+
     constructor(orderRepository){
         this.orderRepository = orderRepository;
     }
@@ -60,6 +62,25 @@ class OrderCreate{
         return orderDetails;
     }
 
+    async updateOrder(orderId, orderStatus){
+        if(!orderId)
+            throw new AppError('Order id not sent!');
+
+        const order = await this.orderRepository.getOrderById(orderId);
+
+        if(!order)
+            throw new AppError('Order does not exist in the database!');
+
+        const isOrderStatusValid = this.status.includes(orderStatus.toLowerCase());
+
+        if(!isOrderStatusValid)
+            throw new AppError('Order status is not valid!');
+
+        await this.orderRepository.updateOrder(orderId, orderStatus);
+
+        return true;
+    }
+
     async validateUser(userId){
         const userRepository = new UserRepository();
         const userCreateService = new UserCreateService(userRepository);
@@ -76,6 +97,7 @@ class OrderCreate{
         const isDishValid = await dishCreateService.getById(dishId);
         return isDishValid;
     }
+
 }
 
 module.exports = OrderCreate;

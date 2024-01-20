@@ -42,6 +42,20 @@ class OrderController{
 
         res.json(ordersDetails);
     }
+
+    async update(req, res){
+        const { orderStatus, orderId } = req.body;
+
+        const orderRepository = new OrderRepository();
+        const orderCreateService = new OrderCreateService(orderRepository);
+
+        const status = await orderCreateService.updateOrder(orderId, orderStatus);
+
+        if(!status)
+            return res.json({message: `It was not possible to update the order n° ${orderId}`})
+
+        return res.json({message: `Order ${orderId} updated successfully!`});
+    }
 }
 
 module.exports = new OrderController();

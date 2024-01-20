@@ -1,5 +1,4 @@
 const knex = require('../database/knex');
-const AppError = require('../utils/AppError');
 
 class OrderRepository{
     async create(userId, dishes){
@@ -52,6 +51,15 @@ class OrderRepository{
         return orders;
     }
 
+    async getOrderById(orderId){
+        try {
+            const [order] = await knex('orders').where({id: orderId});
+            return order;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     async getOrderDetails(orderId){
         try {
             const orderDetails = await knex('order_dishes').where({order_id: orderId});
@@ -65,6 +73,21 @@ class OrderRepository{
             }
             return dishes;
 
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async updateOrder(orderId, orderStatus){
+        try {
+            await knex('orders')
+                .where({id: orderId})
+                .update({
+                    status: orderStatus, 
+                    updated_at: knex.fn.now()
+                });
+
+            return;
         } catch (error) {
             console.error(error);
         }
