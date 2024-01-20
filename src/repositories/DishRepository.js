@@ -63,7 +63,17 @@ class DishRepository{
     }
 
     async updateDish({id, name, category, price, description, picture}){
-        await knex('dishes').update({name, category, price, description, picture}).where({id: id});
+        await knex('dishes')
+            .update({
+            name, 
+            category, 
+            price, 
+            description, 
+            picture,
+            updated_at: knex.fn.now()
+            })
+            .where({id: id});
+
         return; 
     }
 

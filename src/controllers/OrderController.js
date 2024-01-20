@@ -1,10 +1,5 @@
-const DishRepository = require('../repositories/DishRepository');
 const OrderRepository = require('../repositories/OrderRepository');
-const UserRepository = require('../repositories/UserRepository');
-const DishCreateService = require('../services/DishCreate');
-const OrderCreateService = require('../services/OrderCreate');
-const UserCreateService = require('../services/UserCreate');
-const AppError = require('../utils/AppError');
+const OrderCreateService = require('../services/OrderService');
 
 class OrderController{
     async create(req, res){
@@ -15,7 +10,7 @@ class OrderController{
 
         const orderId = await orderCreateService.create(userId, dishes);
 
-        res.json({order_id: orderId});
+        res.status(201).json({order_id: orderId});
     }
 
     async index(req, res){

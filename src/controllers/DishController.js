@@ -1,5 +1,5 @@
 const DishRepository = require('../repositories/DishRepository');
-const DishCreateService = require('../services/DishCreate');
+const DishCreateService = require('../services/DishService');
 const AppError = require('../utils/AppError');
 
 class DishController{
@@ -17,7 +17,7 @@ class DishController{
 
             const dishCreated = await dishCreateService.create({...dish, picturePath});
 
-            res.json({dishCreated});
+            res.status(201).json({dishCreated});
           } 
         catch (error) {
             console.error(error);

@@ -1,5 +1,5 @@
 const DishRepository = require('../../../repositories/DishRepository');
-const DishCreateService = require('../../../services/DishCreate');
+const DishCreateService = require('../../../services/DishService');
 
 exports.seed = async function(knex) {
     const dishes  = require('../files/dishes');

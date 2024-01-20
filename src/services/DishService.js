@@ -1,7 +1,7 @@
 const AppError = require('../utils/AppError');
 const InputChecker = require('../utils/InputChecker');
 
-class DishCreate{
+class DishService{
     constructor(dishRepository){
         this.dishRepository = dishRepository;
     }
@@ -139,4 +139,4 @@ class DishCreate{
 
 }
 
-module.exports = DishCreate;
+module.exports = DishService;

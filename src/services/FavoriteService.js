@@ -1,4 +1,4 @@
-class FavoriteCreate{
+class FavoriteService{
     constructor(userRepository){
         this.userRepository = userRepository;
     }
@@ -30,4 +30,4 @@ class FavoriteCreate{
     }
 }
 
-module.exports = FavoriteCreate;
+module.exports = FavoriteService;

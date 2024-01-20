@@ -1,5 +1,5 @@
 const UserRepository = require('../repositories/UserRepository');   
-const SessionCreateService = require('../services/SessionCreate');
+const SessionCreateService = require('../services/SessionService');
 
 class SessionController{
     async signIn(req, res){

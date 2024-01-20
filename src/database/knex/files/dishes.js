@@ -8,11 +8,19 @@ const dishes = [
 			"picturePath": "Standard image"
 		},
 		{
-			"name": "empanana de jamon y queso",
+			"name": "empanada de jamon y queso",
 			"category": "panificados",
 			"price": 2.99,
 			"description": "massa hojaldrada y crocante, rellena con mucho queso muzzarella y jamon",
 			"ingredients": ["masa", "jamon", "queso muzzarella"],
+			"picturePath": "Standard image"
+		},
+		{
+			"name": "empanada de carne",
+			"category": "panificados",
+			"price": 2.99,
+			"description": "massa hojaldrada y crocante, rellena con carne cortada a cuchillo",
+			"ingredients": ["masa", "carne"],
 			"picturePath": "Standard image"
 		},
 		{
@@ -31,6 +39,7 @@ const dishes = [
 			"ingredients": ["queso mascarpone", "vanillas", "café", "licor"],
 			"picturePath": "Standard image"
 		}
+
 ];
 
 module.exports = dishes;

@@ -4,7 +4,7 @@ const { sign } = require('jsonwebtoken');
 
 const jwtConfig = require('../configs/auth');
 
-class SessionCreate{
+class SessionService{
     constructor(userRepository){
         this.userRepository = userRepository;
     }
@@ -31,4 +31,4 @@ class SessionCreate{
     }
 }
 
-module.exports = SessionCreate;
+module.exports = SessionService;

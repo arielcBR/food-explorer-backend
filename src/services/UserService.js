@@ -2,12 +2,12 @@ const bcrypt = require('bcrypt');
 const AppError = require('../utils/AppError');
 const InputChecker = require('../utils/InputChecker');
 
-class UserCreate{
+class UserService{
     constructor(userRepository){
         this.userRepository = userRepository;
     }
 
-    async execute({name, email, password, isAdmin = false}){
+    async create({name, email, password, isAdmin = false}){
         const isNameValid = InputChecker.text(name);
         const isEmailValid = InputChecker.email(email);
         const isPasswordValid = InputChecker.password(password);
@@ -43,4 +43,4 @@ class UserCreate{
     }
 }
 
-module.exports = UserCreate;
+module.exports = UserService;

@@ -1,12 +1,10 @@
 const DishRepository = require('../repositories/DishRepository');
 const UserRepository = require('../repositories/UserRepository');
-const DishCreateService = require('../services/DishCreate');
-const UserCreateService = require('../services/UserCreate');
+const DishCreateService = require('./DishService');
+const UserCreateService = require('./UserService');
 const AppError = require("../utils/AppError");
 
-
-
-class OrderCreate{
+class OrderService{
     status = ['canceled', 'pending', 'preparing', 'delivering', 'finished'];
 
     constructor(orderRepository){
@@ -100,4 +98,4 @@ class OrderCreate{
 
 }
 
-module.exports = OrderCreate;
+module.exports = OrderService;

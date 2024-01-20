@@ -1,6 +1,6 @@
 const UserRepository = require('../repositories/UserRepository');   
-const UserCreateService = require('../services/UserCreate');
-const FavoriteCreateService = require('../services/FavoriteCreate');
+const UserCreateService = require('../services/UserService');
+const FavoriteCreateService = require('../services/FavoriteService');
 
 class UsersController{
     async create(req, res){
@@ -9,7 +9,7 @@ class UsersController{
         const userRepository = new UserRepository();
         const userCreateService = new UserCreateService(userRepository);
 
-        await userCreateService.execute({name, email, password, isAdmin});
+        await userCreateService.create({name, email, password, isAdmin});
         
         return res.status(201).json();
     }

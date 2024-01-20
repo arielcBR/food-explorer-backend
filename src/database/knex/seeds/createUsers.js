@@ -1,5 +1,5 @@
 const UserRepository = require('../../../repositories/UserRepository');   
-const UserCreateService = require('../../../services/UserCreate');
+const UserCreateService = require('../../../services/UserService');
 
 exports.seed = async function(knex) {
   const userAdmin = { 
@@ -19,7 +19,7 @@ exports.seed = async function(knex) {
   const userRepository = new UserRepository();
   const userCreateService = new UserCreateService(userRepository);
 
-  await userCreateService.execute(userAdmin);
-  await userCreateService.execute(userDefault);
+  await userCreateService.create(userAdmin);
+  await userCreateService.create(userDefault);
 
 };
