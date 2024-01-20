@@ -50,7 +50,25 @@ class OrderRepository{
         }
     
         return orders;
-      }
+    }
+
+    async getOrderDetails(orderId){
+        try {
+            const orderDetails = await knex('order_dishes').where({order_id: orderId});
+
+            let dishes = [];
+
+            for (const item of orderDetails) {
+                const [dish] = await knex('dishes').where({id: item.dish_id});
+                dish.quantity = item.quantity;
+                dishes.push(dish);
+            }
+            return dishes;
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 

@@ -52,6 +52,14 @@ class OrderCreate{
         return ordersId;
     }
 
+    async getOrderDetails(orderId){
+        if(!orderId)
+            throw new AppError('Order id not sent');
+
+        const orderDetails = await this.orderRepository.getOrderDetails(orderId);
+        return orderDetails;
+    }
+
     async validateUser(userId){
         const userRepository = new UserRepository();
         const userCreateService = new UserCreateService(userRepository);

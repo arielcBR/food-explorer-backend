@@ -28,6 +28,20 @@ class OrderController{
         
         res.json(ordersId);
     }
+
+    async get(req, res){
+        const { orderId } = req.query;
+
+        const orderRepository = new OrderRepository();
+        const orderCreateService = new OrderCreateService(orderRepository);
+
+        const ordersDetails = await orderCreateService.getOrderDetails(orderId);
+
+        if(!ordersDetails.length) 
+            return res.json({message: 'Order is empty'});
+
+        res.json(ordersDetails);
+    }
 }
 
 module.exports = new OrderController();
