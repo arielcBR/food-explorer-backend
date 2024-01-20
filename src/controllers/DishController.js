@@ -1,9 +1,10 @@
 const DishRepository = require('../repositories/DishRepository');
 const DishCreateService = require('../services/DishCreate');
+const AppError = require('../utils/AppError');
 
-class AdminController{
+class DishController{
 
-    async create(req, res){
+    async create(req, res, next){
         try {
             const dish  = JSON.parse(req.body.bodyDish);
             const dishPicture = req.files;
@@ -20,12 +21,12 @@ class AdminController{
           } 
         catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
+            next(error);
         }
         
     }
 
-    async getById(req, res){
+    async getById(req, res, next){
         const { dishId } =  req.params;
         try {
             const dishRepository = new DishRepository();
@@ -34,18 +35,18 @@ class AdminController{
             const dish = await dishCreateService.getById(dishId);
             
             if(!dish) {
-                return res.status(404).json({ message: 'Dish not found' });
+                throw new AppError('Dish not found', 404);
             }
               
             res.json({ dish });
         } 
         catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
+            next(error);
         }
     }
 
-    async index(req, res){
+    async index(req, res, next){
         try{
             const dishRepository = new DishRepository();
             const dishCreateService = new DishCreateService(dishRepository);
@@ -56,11 +57,11 @@ class AdminController{
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
+            next(error);
         }
     }
 
-    async update(req, res){
+    async update(req, res, next){
         try{
             const { dishId } =  req.params;
             const [ dishPicture ] = req.files;
@@ -89,7 +90,7 @@ class AdminController{
                 status = false;
 
             if(!status){
-                return res.status(400).json({message: 'The update could not be done!'});
+                throw new AppError('The update could not be done!');
             }
 
             res.json({message: 'Dish updated!'});
@@ -97,28 +98,24 @@ class AdminController{
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
+            next(error);
         }
     }
 
-    async delete(req, res){
+    async delete(req, res, next){
         try{
             const  { dishId } = req.params;
     
             const dishRepository = new DishRepository();
             const dishCreateService = new DishCreateService(dishRepository);
 
-            const status = await dishCreateService.delete(dishId);
-
-            if (status)
-                return res.json({ message: 'Dish successfully deleted!' });
-                
-            res.json({ message: 'Dish could not be deleted!' });
+            await dishCreateService.delete(dishId);
+            return res.json({ message: 'Dish successfully deleted!' });
     
         }
         catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Internal server error' });
+            next(error);
         }
 
     }
@@ -126,27 +123,21 @@ class AdminController{
     async search(req, res){
         const {dish} = req.query;
 
-        if(dish == undefined)
-            return res.json({});
+        if(!dish)
+            throw new AppError('Bad request, dish not valid!');
 
         else{
-            try {
-                const dishRepository = new DishRepository();
-                const dishCreateService = new DishCreateService(dishRepository);
+            const dishRepository = new DishRepository();
+            const dishCreateService = new DishCreateService(dishRepository);
 
-                const dishes = await dishCreateService.searchDishes(dish);
+            const dishes = await dishCreateService.searchDishes(dish);
 
-                if(!dishes)
-                    return res.json({message: 'Nothing found'})
-    
-                return res.json({dishes : dishes});
-            } 
-            catch (error) {
-                console.error(error);
-                res.status(500).json({ message: 'Internal server error' });
-            }
-        }
+            if(!dishes.length)
+                return res.json({message: 'Nothing found!'})
+
+            return res.json({dishes : dishes});
+        } 
     }
 }
 
-module.exports = new AdminController();
+module.exports = new DishController();

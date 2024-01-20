@@ -8,6 +8,7 @@ const ensureAuthentication = require('../middlewares/ensureAuthentication');
 const orderController = require('../controllers/OrderController');
 
 orderRoutes.post('/', ensureAuthentication, orderController.create);
+orderRoutes.get('/:userId', ensureAuthentication, orderController.index);
 
 
 module.exports = orderRoutes;

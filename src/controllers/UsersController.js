@@ -29,7 +29,7 @@ class UsersController{
         }
     }
 
-    async indexByUser(req, res){
+    async favoriteDishesByUser(req, res){
         const { userId } = req.body;
 
         const userRepository = new UserRepository();
@@ -47,6 +47,7 @@ class UsersController{
             return res.status(400).json({message: 'It is not possible to show it now'});
         }
     }
+
 }
 
 module.exports = new UsersController();

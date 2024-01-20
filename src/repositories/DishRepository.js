@@ -53,7 +53,7 @@ class DishRepository{
     }
 
     async getDishById(id){
-        const dish = await knex('dishes').select().where({id: id});
+        const [dish] = await knex('dishes').select().where({id: id});
         return dish;
     }
 

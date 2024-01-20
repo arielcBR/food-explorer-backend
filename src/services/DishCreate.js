@@ -32,23 +32,37 @@ class DishCreate{
     }
 
     async getAll(){
-        const dishes = await this.dishRepository.getAllDishes();
-        return dishes;
+        try {
+            const dishes = await this.dishRepository.getAllDishes();
+
+            if(!dishes)
+                throw new AppError('Dish not found!', 404);
+
+            return dishes;
+        } 
+        catch (error) {
+            console.error(error);
+            throw new AppError(error);
+        }
     }
 
     async getById(id){
-        const [dish] = await this.dishRepository.getDishById(id);
+        const dish = await this.dishRepository.getDishById(id);
+
         return dish;
     }
 
     async delete(id){
-        const dish = await this.get(id);
+        const dish = await this.getById(id);
 
         if(!dish)
-            return false;
+            throw new AppError('Dish not found!', 404);
 
         else{
             const status = await this.dishRepository.deleteDish(id);
+
+            if (!status)
+                throw new AppError('Dish could not be deleted!');
             
             return true;
         }
@@ -56,12 +70,11 @@ class DishCreate{
     }
 
     async update(dishId, newDishPicture, dishUpdated){
-        const dish = await this.get(dishId);
+        const dish = await this.getById(dishId);
 
         // Dish not found
-        if(dish == undefined){
-            return false;
-        }
+        if(!dish)
+            throw new AppError('Dish not found!', 404);
 
         else{
 

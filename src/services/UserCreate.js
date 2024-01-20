@@ -35,6 +35,12 @@ class UserCreate{
         return userCreated;
 
     }
+
+    async getById(id){
+        const user = await this.userRepository.findById(id);
+
+        return user;
+    }
 }
 
 module.exports = UserCreate;

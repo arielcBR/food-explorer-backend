@@ -58,6 +58,7 @@ class UserRepository{
 
         return dishes;
     }
+
 }
 
 module.exports = UserRepository;

@@ -41,6 +41,17 @@ class OrderRepository{
                 return false;
             }
     }
+
+    async getOrders(userId) {
+        const orders = await knex('orders').where({ user_id: userId });
+    
+        if (!orders.length) {
+          return [];
+        }
+    
+        return orders;
+      }
 }
+
 
 module.exports = OrderRepository;
