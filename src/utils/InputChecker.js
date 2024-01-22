@@ -1,6 +1,6 @@
 class InputChecker{
     text(text){
-        if(!text)
+        if(!text || text.length < 2)
             return false;
         return true;
     }
@@ -11,7 +11,7 @@ class InputChecker{
     }
 
     password(password) {
-        const re = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+        const re = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{6,32}$/;
         return re.test(password);
     }
 

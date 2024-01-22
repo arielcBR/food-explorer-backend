@@ -13,9 +13,9 @@ class UserService{
         const isPasswordValid = InputChecker.password(password);
 
         if(!isNameValid)
-            throw new AppError('The name is not valid!');
+            throw new AppError('The name is not valid, try it again!');
         if(!isEmailValid)
-            throw new AppError('The email is not valid!');
+            throw new AppError('The email is not valid, try it again!');
         if(!isPasswordValid)
             throw new AppError('The password does not fit the pattern, try another one!');
 
@@ -37,6 +37,12 @@ class UserService{
     }
 
     async getById(id){
+        if(!id === undefined)
+            throw new AppError('The id is not being sent!');
+
+        if(!Number(id) <= 0)
+            throw new AppError('The id is invalid!');
+
         const user = await this.userRepository.findById(id);
 
         return user;
