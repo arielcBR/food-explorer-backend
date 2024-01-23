@@ -22,6 +22,7 @@ class SessionService{
             throw new AppError('The email or password are incorrect!', 401);
 
         const { secret, expiresIn } = jwtConfig.jwt;
+        
         const token = sign({}, secret, {
             subject: String(user.id),
             expiresIn

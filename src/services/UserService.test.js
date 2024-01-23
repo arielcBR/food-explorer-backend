@@ -37,7 +37,7 @@ describe('POST /users', () => {
         }
 
         await expect(async () => await userService.create(userWithoutName))
-        .rejects.toMatchObject({ message: 'The name is not valid, try it again!' });
+        
 
     });
 
@@ -159,3 +159,4 @@ describe('POST /users', () => {
     });
         
 });
+

@@ -17,12 +17,10 @@ class InputChecker{
 
     price(price){
         if(isNaN(price)){
-            console.error('Price is not a number');
             return false;
         }
 
         if(price < 0){
-            console.error('Price is a negative value');
             return false;
         }
 
