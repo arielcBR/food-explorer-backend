@@ -1,5 +1,3 @@
-const DishRepository = require('../repositories/DishRepository');
-const UserRepository = require('../repositories/UserRepository');
 const DishCreateService = require('./DishService');
 const UserCreateService = require('./UserService');
 const AppError = require("../utils/AppError");
@@ -7,31 +5,32 @@ const AppError = require("../utils/AppError");
 class OrderService{
     status = ['canceled', 'pending', 'preparing', 'delivering', 'finished'];
 
-    constructor(orderRepository){
+    constructor(orderRepository, userRepository, dishRepository) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository; 
+        this.dishRepository = dishRepository;
     }
 
     async create(userId, dishes){
-
         if(!userId)
             throw new AppError('User not sent!');
 
-        if(!dishes.length)
-            throw new AppError('Dishes not sent!');
-     
-        const isUserValid = await this.validateUser(userId);
+        if(!dishes || !dishes.length)
+            throw new AppError('Dishes not sent');
+
+        const isUserValid = await this.validateUser(userId, this.userRepository);
 
         if(!isUserValid)
             throw new AppError('User not find!');
         
         for (const item of dishes) {
-            const isDishValid = await this.validateDish(item.id);
+            const isDishValid = await this.validateDish(item.id, this.dishRepository);
             
             if (!isDishValid) 
                 throw new AppError(`Dish id: ${item.id} sent is invalid`);
         }
 
-        const orderId = await this.orderRepository.create(userId, dishes);
+        const orderId = await this.orderRepository.create(userId, dishes, this.dishRepository);
         
         return orderId;
     }
@@ -79,20 +78,17 @@ class OrderService{
         return true;
     }
 
-    async validateUser(userId){
-        const userRepository = new UserRepository();
+    async validateUser(userId, userRepository) {
         const userCreateService = new UserCreateService(userRepository);
-
         const isUserValid = await userCreateService.getById(userId);
 
         return isUserValid;
     }
-
-    async validateDish(dishId){
-        const dishRepository = new DishRepository();
+    
+    async validateDish(dishId, dishRepository){
         const dishCreateService = new DishCreateService(dishRepository);
-
         const isDishValid = await dishCreateService.getById(dishId);
+
         return isDishValid;
     }
 

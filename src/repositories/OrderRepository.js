@@ -7,11 +7,6 @@ class OrderRepository{
             try {
                 transaction = await knex.transaction();
     
-                if (!dishes.length) {
-                    await transaction.rollback();
-                    return false;
-                }
-    
                 const [ orderId ] = await transaction('orders').insert({ user_id: userId });
     
                 for (const dish of dishes) {
@@ -33,7 +28,7 @@ class OrderRepository{
             catch (error) {
                 console.error(error);
     
-                if (transaction) {
+                if(transaction) {
                     await transaction.rollback();
                 }
     

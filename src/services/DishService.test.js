@@ -16,7 +16,8 @@ describe('POST /dishes', () => {
             category: "postre",
             price: 39.99,
             description: "El tradicional postre, cremoso y rico",
-            ingredients: ["arandonos", "queso crema", "frutillas"]
+            ingredients: ["arandonos", "queso crema", "frutillas"],
+
         };
 
         const response = await dishService.create({...request});
@@ -49,8 +50,12 @@ describe('POST /dishes', () => {
             ingredients: ["arandonos", "queso crema", "frutillas"]
         };
 
-        await expect(async() => await dishService.create({...request}))
-        .rejects.toMatchObject({ message: 'The name is not valid!' });
+        try {
+            await dishService.create({...request});
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({message: 'The name is not valid!'});
+        }
     });
 
     it('Should not pass when creating a dish without category', async () => {
@@ -62,8 +67,12 @@ describe('POST /dishes', () => {
             ingredients: ["arandonos", "queso crema", "frutillas"]
         };
 
-        await expect(async() => await dishService.create({...request}))
-        .rejects.toMatchObject({ message: 'The category is not valid!' });
+        try {
+            await dishService.create({...request});
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The category is not valid!'});
+        }
     });
 
     it('Should not pass when creating a dish with a negative price', async () => {
@@ -75,8 +84,12 @@ describe('POST /dishes', () => {
             ingredients: ["arandonos", "queso crema", "frutillas"]
         };
 
-        await expect(async() => await dishService.create({...request}))
-        .rejects.toMatchObject({ message: 'The price is not valid!' });
+        try {
+            await dishService.create({...request});
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The price is not valid!'});
+        }
     });
 
     it('Should not pass when creating a dish without a price', async () => {
@@ -87,8 +100,13 @@ describe('POST /dishes', () => {
             ingredients: ["arandonos", "queso crema", "frutillas"]
         };
 
-        await expect(async() => await dishService.create({...request}))
-        .rejects.toMatchObject({ message: 'The price is not valid!' });
+        try {
+            await dishService.create({...request});
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({message: 'The price is not valid!'});
+        }
+
     });
 
     it('Should not pass when creating a dish without description', async () => {
@@ -99,8 +117,13 @@ describe('POST /dishes', () => {
             ingredients: ["arandonos", "queso crema", "frutillas"]
         };
 
-        await expect(async() => await dishService.create({...request}))
-        .rejects.toMatchObject({ message: 'The description is not valid!' });
+        try {
+            await dishService.create({...request});
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({message: 'The description is not valid!'});
+        }
+
     });
 
     it('Should not pass when creating a dish without the ingredient list', async () => {
@@ -229,8 +252,11 @@ describe('DELETE /dishes', () => {
     it('Should not pass when trying to delete a nonexistent dish', async () => {
         const invalidDishId = 1001;
 
-        expect(async () => await dishService.delete(invalidDishId))
-            .rejects.toMatchObject({message: 'Dish not found!'});
-
+        try {
+            await dishService.delete(invalidDishId);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({message: 'Dish not found!'});
+        }
     });
 });

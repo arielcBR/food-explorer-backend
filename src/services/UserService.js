@@ -37,10 +37,10 @@ class UserService{
     }
 
     async getById(id){
-        if(!id === undefined)
+        if(!id)
             throw new AppError('The id is not being sent!');
 
-        if(!Number(id) <= 0)
+        if(id <= 0)
             throw new AppError('The id is invalid!');
 
         const user = await this.userRepository.findById(id);

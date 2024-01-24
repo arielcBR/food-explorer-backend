@@ -29,7 +29,7 @@ describe('POST /users', () => {
         expect(response.body.id).not.toBe('');
     });
 
-    it('Should not pass without name', async () =>{
+    it('Should pass without name', async () =>{
         const userWithoutName = {
             name: '',
             email: "user@test.com",
@@ -41,63 +41,83 @@ describe('POST /users', () => {
 
     });
 
-    it('Should not pass with a name shorter than 2 characters', async () => {
+    it('Should pass with a name shorter than 2 characters', async () => {
         const user = {
             name: 'U',
             email: 'user@test.com',
             password: 'abcdef1!'
         };
 
-        await expect(async() => await userService.create(user))
-        .rejects.toMatchObject({ message: 'The name is not valid, try it again!' });
+        try {
+            await userService.create(user);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The name is not valid, try it again!' });
+        }
 
     });
 
-    it('Should not pass without email', async () =>{
+    it('Should pass without email', async () =>{
         const userWithoutEmail = {
             name: "user test",
             email: '',
             password: "abcde1!"
         }
 
-        await expect(async () => await userService.create(userWithoutEmail))
-        .rejects.toMatchObject({ message: 'The email is not valid, try it again!' });
+        try {
+            await userService.create(userWithoutEmail);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The email is not valid, try it again!' });
+        }
 
     });
 
-    it('Should not pass without a valid email', async () => {
+    it('Should pass without a valid email', async () => {
         const user = {
             name: 'User test',
             email: 'user@com',
             password: 'abcde1!'
         };
 
-        await expect(async() => await userService.create(user))
-        .rejects.toMatchObject({ message: 'The email is not valid, try it again!' });
+        try {
+            await userService.create(user);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The email is not valid, try it again!' });
+        }
 
     });
   
-    it('Should not pass without password', async () => {
+    it('Should pass without password', async () => {
         const userWithoutPassword = {
             name: 'User test',
             email: 'user@test.com',
             password: ''
         };
 
-        await expect(async() => await userService.create(userWithoutPassword))
-        .rejects.toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        try {
+            await userService.create(userWithoutPassword);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        }
 
     });
 
-    it('Should not pass without a special character within the password', async () => {
+    it('Should pass without a special character within the password', async () => {
         const user = {
             name: 'User test',
             email: 'user@test.com',
             password: 'abcdef1'
         };
 
-        await expect(async() => await userService.create(user))
-        .rejects.toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        try {
+            await userService.create(user);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        }
 
     });
 
@@ -108,36 +128,47 @@ describe('POST /users', () => {
             password: 'abcdef!'
         };
 
-        await expect(async() => await userService.create(user))
-        .rejects.toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
-
+        try {
+            await userService.create(user);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        }
     });
 
-    it('Should not pass without a letter character within the password', async () => {
+    it('Should pass without a letter character within the password', async () => {
         const user = {
             name: 'User test',
             email: 'user@test.com',
             password: '12345!'
         };
 
-        await expect(async() => await userService.create(user))
-        .rejects.toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        try {
+            await userService.create(user);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
 
+        }
     });
 
-    it('Should not pass when the password has less than 6 characters', async () => {
+    it('Should pass when the password has less than 6 characters', async () => {
         const user = {
             name: 'User test',
             email: 'user@test.com',
             password: 'abc1!'
         };
 
-        await expect(async() => await userService.create(user))
-        .rejects.toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
+        try {
+            await userService.create(user);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The password does not fit the pattern, try another one!' });
 
+        }
     });
 
-    it('Should not allow user with duplicated email ', async () => {
+    it('Should allow user with duplicated email ', async () => {
         let response;
         
         const user = {
@@ -154,8 +185,12 @@ describe('POST /users', () => {
 
         response = await userService.create(user);
 
-        await expect(async() => await userService.create(user2))
-        .rejects.toMatchObject({ message: 'The user is already registered!' });
+        try {
+            await userService.create(user2);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The user is already registered!' });
+        }
     });
         
 });

@@ -65,7 +65,6 @@ class DishService{
 
         else{
             const status = await this.dishRepository.deleteDish(id);
-            console.log('status: ', status)
             if (!status)
                 throw new AppError('Dish could not be deleted!');
             

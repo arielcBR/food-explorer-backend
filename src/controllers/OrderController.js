@@ -1,3 +1,5 @@
+const DishRepository = require('../repositories/DishRepository');
+const UserRepository = require('../repositories/UserRepository');
 const OrderRepository = require('../repositories/OrderRepository');
 const OrderCreateService = require('../services/OrderService');
 
@@ -5,8 +7,10 @@ class OrderController{
     async create(req, res){
         const { userId, dishes } = req.body;
 
+        const dishRepository = new DishRepository();
+        const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
-        const orderCreateService = new OrderCreateService(orderRepository);
+        const orderCreateService = new OrderCreateService(orderRepository, userRepository, dishRepository);
 
         const orderId = await orderCreateService.create(userId, dishes);
 
@@ -16,8 +20,9 @@ class OrderController{
     async index(req, res){
         const { userId } = req.params;
 
+        const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
-        const orderCreateService = new OrderCreateService(orderRepository);
+        const orderCreateService = new OrderCreateService(orderRepository, userRepository);
 
         const ordersId = await orderCreateService.getOrders(userId);
         
@@ -27,8 +32,9 @@ class OrderController{
     async get(req, res){
         const { orderId } = req.query;
 
+        const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
-        const orderCreateService = new OrderCreateService(orderRepository);
+        const orderCreateService = new OrderCreateService(orderRepository, userRepository);
 
         const ordersDetails = await orderCreateService.getOrderDetails(orderId);
 

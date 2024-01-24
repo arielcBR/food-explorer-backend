@@ -54,13 +54,21 @@ class DishRepositoryInMemory{
         response = {
             statusCode: 201,
             body: {
-                id: dish.id
+                id: dish.id,
+                name,
+                category,
+                price,
+                description,
+                ingredients,
+                picturePath,
+                created_at: new Date(),
+                updated_at: new Date()
             }
         }
         return response;
     }
 
-    async getDishById(dishId){
+    async getDishById(dishId) {
         const dish = this.dishes.find(item => item.id == dishId);
         return dish;
     }
@@ -95,7 +103,6 @@ class DishRepositoryInMemory{
         return false;
     }
     
-
     async getDishIngredients(id) {
         const ingredients = this.dish_ingredients
             .filter(item => item.dish_id === id)
