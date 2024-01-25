@@ -23,7 +23,6 @@ describe('POST /dishes', () => {
         const response = await dishService.create({...request});
 
         expect(response.statusCode).toBe(201);
-
     });
 
     it('Should create a dish and return a dish id', async () => {
@@ -38,10 +37,9 @@ describe('POST /dishes', () => {
         const response = await dishService.create({...request});
 
         expect(response.body.id).not.toBe('' || undefined);
-
     });
 
-    it('Should not pass when creating a dish without name', async () => {
+    it('Should pass when creating a dish without name', async () => {
         const request = {
             name: "",
             category: "postre",
@@ -58,7 +56,7 @@ describe('POST /dishes', () => {
         }
     });
 
-    it('Should not pass when creating a dish without category', async () => {
+    it('Should pass when creating a dish without category', async () => {
         const request = {
             name: "Cheesecake",
             category: "",
@@ -75,7 +73,7 @@ describe('POST /dishes', () => {
         }
     });
 
-    it('Should not pass when creating a dish with a negative price', async () => {
+    it('Should pass when creating a dish with a negative price', async () => {
         const request = {
             name: "Cheesecake",
             category: "Postre",
@@ -92,7 +90,7 @@ describe('POST /dishes', () => {
         }
     });
 
-    it('Should not pass when creating a dish without a price', async () => {
+    it('Should pass when creating a dish without a price', async () => {
         const request = {
             name: "Cheesecake",
             category: "Postre",
@@ -109,7 +107,7 @@ describe('POST /dishes', () => {
 
     });
 
-    it('Should not pass when creating a dish without description', async () => {
+    it('Should pass when creating a dish without description', async () => {
         const request = {
             name: "Cheesecake",
             category: "postre",
@@ -126,7 +124,7 @@ describe('POST /dishes', () => {
 
     });
 
-    it('Should not pass when creating a dish without the ingredient list', async () => {
+    it('Should pass when creating a dish without the ingredient list', async () => {
         const request = {
             name: "Cheesecake",
             category: "postre",
@@ -135,8 +133,12 @@ describe('POST /dishes', () => {
             ingredients: []
         };
 
-        await expect(async() => await dishService.create({...request}))
-        .rejects.toMatchObject({ message: 'The ingredient list cannot be empty!' });
+        try {
+            await dishService.create({...request});
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'The ingredient list cannot be empty!' });
+        }
     });
 
 });
@@ -212,7 +214,7 @@ describe('PATCH /dishes', () => {
         expect(updatedDish.picture).toBe(updateRequest);
     });
 
-    it('Should not pass when updating a dish without a new picture and body', async () => {
+    it('Should pass when updating a dish without a new picture and body', async () => {
         await expect(async() => await dishService.update(dishId, null, null))
         .rejects.toMatchObject({message: 'No updates provided. Please provide a new picture and/or updated dish details.'});
         
@@ -249,7 +251,7 @@ describe('DELETE /dishes', () => {
         expect(status).toBe(true);
     });
 
-    it('Should not pass when trying to delete a nonexistent dish', async () => {
+    it('Should pass, cannot delete the when a dish invalid is sent', async () => {
         const invalidDishId = 1001;
 
         try {

@@ -16,18 +16,18 @@ class OrderService{
             throw new AppError('User not sent!');
 
         if(!dishes || !dishes.length)
-            throw new AppError('Dishes not sent');
+            throw new AppError('Dishes not sent!');
 
         const isUserValid = await this.validateUser(userId, this.userRepository);
 
         if(!isUserValid)
-            throw new AppError('User not find!');
+            throw new AppError('User not found!');
         
         for (const item of dishes) {
             const isDishValid = await this.validateDish(item.id, this.dishRepository);
             
             if (!isDishValid) 
-                throw new AppError(`Dish id: ${item.id} sent is invalid`);
+                throw new AppError(`Dish not found!`);
         }
 
         const orderId = await this.orderRepository.create(userId, dishes, this.dishRepository);
