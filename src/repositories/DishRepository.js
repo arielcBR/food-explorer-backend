@@ -38,7 +38,7 @@ class DishRepository{
             return dishId;
         }
         catch(error){
-            console.log(error);
+            console.error(error);
             transaction.rollback();
             return false;
         }
@@ -131,7 +131,6 @@ class DishRepository{
         .where('ingredients.name', 'like', `%${dish}%`);
 
         const allDishes = [...dishesByName, ...dishesByIngredient];
-        console.log(allDishes);
 
         return allDishes;
     }

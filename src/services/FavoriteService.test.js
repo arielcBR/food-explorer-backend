@@ -73,7 +73,7 @@ describe('POST /favorite', () => {
         expect(response).toBe('Anything has changed!');
     });
 
-    it('Should pass when updating without a user id', async () => {
+    it('Should pass when updating without an id user', async () => {
         const favorite = true;
 
         try {
@@ -84,7 +84,7 @@ describe('POST /favorite', () => {
         }
     });
 
-    it('Should pass when updating with an invalid user id', async () => {
+    it('Should pass when updating with an invalid id user', async () => {
         const favorite = true;
 
         try {
@@ -95,7 +95,7 @@ describe('POST /favorite', () => {
         }
     });
 
-    it('Should pass when updating with an invalid dish id', async () => {
+    it('Should pass when updating with an invalid id dish', async () => {
         const favorite = true;
 
         try {

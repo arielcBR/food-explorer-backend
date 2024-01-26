@@ -23,7 +23,7 @@ describe('POST /users', () => {
         expect(response.statusCode).toBe(201);
     });
 
-    it('Should respond with a user id', async () =>{
+    it('Should respond with an id user', async () =>{
         const response = await userService.create(user);
         
         expect(response.body.id).not.toBe('');

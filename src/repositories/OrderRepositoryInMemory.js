@@ -34,6 +34,21 @@ class OrderRepositoryInMemory{
         return order;
     }
 
+    async getOrderById(orderId) {
+        const order = this.orders.find(order => order.id === orderId);
+        return order;
+    }
+    
+    async updateOrder(orderId, orderStatus){
+        const orderUpdated = await this.getOrderById(orderId);
+
+        orderUpdated.status = orderStatus;
+        orderUpdated.updated_at = new Date();
+
+        this.orders = this.orders.map(item => (item.id === orderId ? orderUpdated : item));
+        return orderUpdated;
+    }
+
 }
 
 module.exports = OrderRepositoryInMemory;

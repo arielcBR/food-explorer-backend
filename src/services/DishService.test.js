@@ -25,7 +25,7 @@ describe('POST /dishes', () => {
         expect(response.statusCode).toBe(201);
     });
 
-    it('Should create a dish and return a dish id', async () => {
+    it('Should create a dish and return an id dish', async () => {
         const request = {
             name: "Cheesecake de frutos rojos",
             category: "postre",
@@ -124,7 +124,7 @@ describe('POST /dishes', () => {
 
     });
 
-    it('Should pass when creating a dish without the ingredient list', async () => {
+    it('Should pass when creating a dish without any ingredient', async () => {
         const request = {
             name: "Cheesecake",
             category: "postre",
@@ -251,7 +251,7 @@ describe('DELETE /dishes', () => {
         expect(status).toBe(true);
     });
 
-    it('Should pass, cannot delete the when a dish invalid is sent', async () => {
+    it('Should pass when trying to delete an invalid dish', async () => {
         const invalidDishId = 1001;
 
         try {

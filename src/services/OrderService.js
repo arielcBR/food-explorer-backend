@@ -30,9 +30,9 @@ class OrderService{
                 throw new AppError(`Dish not found!`);
         }
 
-        const orderId = await this.orderRepository.create(userId, dishes, this.dishRepository);
+        const order = await this.orderRepository.create(userId, dishes, this.dishRepository);
         
-        return orderId;
+        return order;
     }
 
     async getOrders(userId){
@@ -59,26 +59,27 @@ class OrderService{
         return orderDetails;
     }
 
-    async updateOrder(orderId, orderStatus){
-        
-        if(!orderId)
-            throw new AppError('Order id not sent!');
-        
-        if(orderId)
+    async updateOrder(orderId, orderStatus){ 
+        if(!orderStatus)
+            throw new AppError('Order status not sent!');
+
+        const isOrderStatusValid = this.status.includes(orderStatus);
+
+        if(!isOrderStatusValid)
+            throw new AppError('Order status sent is invalid!');
+       
+        if(!orderId || orderId <= 0)
+            throw new AppError('Order not sent or invalid!');
 
         const order = await this.orderRepository.getOrderById(orderId);
-
+        
         if(!order)
             throw new AppError('Order does not exist in the database!');
 
-        const isOrderStatusValid = this.status.includes(orderStatus.toLowerCase());
 
-        if(!isOrderStatusValid)
-            throw new AppError('Order status is not valid!');
+        const orderUpdated = await this.orderRepository.updateOrder(orderId, orderStatus);
 
-        await this.orderRepository.updateOrder(orderId, orderStatus);
-
-        return true;
+        return orderUpdated;
     }
 
     async validateUser(userId, userRepository) {

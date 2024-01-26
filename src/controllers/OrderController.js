@@ -50,7 +50,7 @@ class OrderController{
         const orderRepository = new OrderRepository();
         const orderCreateService = new OrderCreateService(orderRepository);
 
-        const status = await orderCreateService.updateOrder(orderId, orderStatus);
+        const status = await orderCreateService.updateOrder(orderId, orderStatus.toLowerCase());
 
         if(!status)
             return res.json({message: `It was not possible to update the order n° ${orderId}`})
