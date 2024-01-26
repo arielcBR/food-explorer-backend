@@ -34,13 +34,13 @@ class UserRepositoryInMemory{
         return this.users.find(user => user.id == id) || false;
     }
 
-    async getFavorite(user_id, dish_id){
-        const isDishFavorite = this.user_favorite_dishes.find(item => item.user_id === user_id && item.dish_id === dish_id);
-
-        if (!isDishFavorite)
-            return false;
-        return isDishFavorite;
+    async resetFavorite(user_id, dish_id) {
+        this.user_favorite_dishes = this.user_favorite_dishes
+            .filter(item => !(item.user_id == user_id && item.dish_id == dish_id));
+    
+        return this.user_favorite_dishes;
     }
+    
 
     async setFavorite(user_id, dish_id) {
         const newFavoriteDish = { 
@@ -55,6 +55,13 @@ class UserRepositoryInMemory{
     
         return newFavoriteDish;
     }
+
+    async getFavorite(user_id, dish_id) {
+        const favoriteDish = this.user_favorite_dishes.find(item => item.user_id === user_id && item.dish_id === dish_id);
+    
+        return favoriteDish || false;
+    }
+    
 }
 
 module.exports = UserRepositoryInMemory;

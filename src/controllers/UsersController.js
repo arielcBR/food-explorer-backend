@@ -1,3 +1,4 @@
+const DishRepository = require('../repositories/DishRepository'); 
 const UserRepository = require('../repositories/UserRepository');   
 const UserCreateService = require('../services/UserService');
 const FavoriteCreateService = require('../services/FavoriteService');
@@ -6,6 +7,7 @@ class UsersController{
     async create(req, res){
         const { name, email, password, isAdmin } = req.body;
 
+        const dishRepository = new DishRepository();
         const userRepository = new UserRepository();
         const userCreateService = new UserCreateService(userRepository);
 
@@ -18,11 +20,11 @@ class UsersController{
         const { userId, dishId, favorite } = req.body;
 
         const userRepository = new UserRepository();
-        const favoriteCreateService = new FavoriteCreateService(userRepository);
+        const favoriteCreateService = new FavoriteCreateService(userRepository, dishRepository);
 
         try {
-            await favoriteCreateService.execute(userId, dishId, favorite)
-            res.json({message: 'Favorite list updated!'});
+            const messageStatus = await favoriteCreateService.execute(userId, dishId, favorite)
+            res.json({message: messageStatus });
         } catch (error) {
             console.error(error);
             return res.status(400).json({message: 'It was not possible to favorite the dish!'});

@@ -60,8 +60,11 @@ class OrderService{
     }
 
     async updateOrder(orderId, orderStatus){
+        
         if(!orderId)
             throw new AppError('Order id not sent!');
+        
+        if(orderId)
 
         const order = await this.orderRepository.getOrderById(orderId);
 
