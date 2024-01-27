@@ -19,11 +19,12 @@ class UsersController{
     async setFavorite(req, res){
         const { userId, dishId, favorite } = req.body;
 
+        const dishRepository = new DishRepository();
         const userRepository = new UserRepository();
-        const favoriteCreateService = new FavoriteCreateService(userRepository, dishRepository);
+        const favoriteService = new FavoriteCreateService(userRepository, dishRepository);
 
         try {
-            const messageStatus = await favoriteCreateService.execute(userId, dishId, favorite)
+            const messageStatus = await favoriteService.setFavoriteStatus(userId, dishId, favorite)
             res.json({message: messageStatus });
         } catch (error) {
             console.error(error);

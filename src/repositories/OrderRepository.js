@@ -75,14 +75,14 @@ class OrderRepository{
 
     async updateOrder(orderId, orderStatus){
         try {
-            await knex('orders')
+            const status = await knex('orders')
                 .where({id: orderId})
                 .update({
                     status: orderStatus, 
                     updated_at: knex.fn.now()
                 });
 
-            return;
+            return !status ? false : status;
         } catch (error) {
             console.error(error);
         }

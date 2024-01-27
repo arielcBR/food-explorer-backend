@@ -90,7 +90,7 @@ describe('POST /orders', () => {
         }
     });
 
-    it('Should pass, cannot create an order with an invalid user', async () => {
+    it('Should pass, cannot create an order with an non-existent user', async () => {
         const userId = 10000;
         const dishes = [{id: dish1.id, quantity: 5}, {id: dish2.id, quantity: 3}];
         
@@ -102,7 +102,7 @@ describe('POST /orders', () => {
         }
     });
 
-    it('Should pass, cannot create an order with an invalid user', async () => {
+    it('Should pass, cannot create an order with an non-existent dish', async () => {
         const userId = user.id;
         const dishes = [{id: dish1.id, quantity: 5}, {id: -100, quantity: 3}];
         
@@ -111,6 +111,18 @@ describe('POST /orders', () => {
             fail('Expected the promise to be rejected.');
         } catch (error) {
             expect(error).toMatchObject({ message: 'Dish not found!' });
+        }
+    });
+
+    it('Should pass, cannot create an order with the dish quantity equal or less to zero', async () => {
+        const userId = user.id;
+        const dishes = [{id: dish1.id, quantity: 5}, {id: dish2.id, quantity: -3}];
+        
+        try {
+            await orderService.create(userId, dishes);
+            fail('Expected the promise to be rejected.');
+        } catch (error) {
+            expect(error).toMatchObject({ message: 'Quantity sent is invalid!' });
         }
     });
     

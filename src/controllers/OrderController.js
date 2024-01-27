@@ -20,9 +20,10 @@ class OrderController{
     async index(req, res){
         const { userId } = req.params;
 
+        const dishRepository = new DishRepository();
         const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
-        const orderCreateService = new OrderCreateService(orderRepository, userRepository);
+        const orderCreateService = new OrderCreateService(orderRepository, userRepository, dishRepository);
 
         const ordersId = await orderCreateService.getOrders(userId);
         
@@ -32,9 +33,10 @@ class OrderController{
     async get(req, res){
         const { orderId } = req.query;
 
+        const dishRepository = new DishRepository();
         const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
-        const orderCreateService = new OrderCreateService(orderRepository, userRepository);
+        const orderCreateService = new OrderCreateService(orderRepository, userRepository, dishRepository);
 
         const ordersDetails = await orderCreateService.getOrderDetails(orderId);
 
@@ -47,10 +49,13 @@ class OrderController{
     async update(req, res){
         const { orderStatus, orderId } = req.body;
 
+        const dishRepository = new DishRepository();
+        const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
-        const orderCreateService = new OrderCreateService(orderRepository);
+        const orderCreateService = new OrderCreateService(orderRepository, userRepository, dishRepository);
 
-        const status = await orderCreateService.updateOrder(orderId, orderStatus.toLowerCase());
+
+        const status = await orderCreateService.updateOrder(orderId, orderStatus);
 
         if(!status)
             return res.json({message: `It was not possible to update the order n° ${orderId}`})

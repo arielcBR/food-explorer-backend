@@ -27,7 +27,10 @@ class OrderService{
             const isDishValid = await this.validateDish(item.id, this.dishRepository);
             
             if (!isDishValid) 
-                throw new AppError(`Dish not found!`);
+                throw new AppError('Dish not found!');
+            
+            else if(item.quantity <= 0)
+                throw new AppError('Quantity sent is invalid!');
         }
 
         const order = await this.orderRepository.create(userId, dishes, this.dishRepository);
@@ -77,7 +80,7 @@ class OrderService{
             throw new AppError('Order does not exist in the database!');
 
 
-        const orderUpdated = await this.orderRepository.updateOrder(orderId, orderStatus);
+        const orderUpdated = await this.orderRepository.updateOrder(orderId, orderStatus.toLowerCase());
 
         return orderUpdated;
     }

@@ -90,18 +90,24 @@ class DishService{
                 const isNewNameValid = InputChecker.text(dishUpdated.name);
                 if(isNewNameValid)
                     dish.name = dishUpdated.name;
+                else 
+                    throw new AppError('The name is invalid!');
             }
     
             if(dishUpdated.category){
                 const isNewCategoryValid = InputChecker.text(dishUpdated.category);
                 if(isNewCategoryValid)    
                     dish.category = dishUpdated.category;
+                else 
+                    throw new AppError('The category is invalid!');
             }
     
             if(dishUpdated.price){
                 const isNewPriceValid = InputChecker.price(dishUpdated.price);
                 if(isNewPriceValid)
                     dish.price = dishUpdated.price;
+                else 
+                    throw new AppError('The price is invalid!');
             }
     
             if(dishUpdated.description)
