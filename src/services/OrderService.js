@@ -39,7 +39,7 @@ class OrderService{
     }
 
     async getOrders(userId){
-        const isUserValid = await this.validateUser(userId);
+        const isUserValid = await this.validateUser(userId, this.userRepository);
 
         if(!isUserValid)
             throw new AppError('User not find!');
@@ -86,6 +86,7 @@ class OrderService{
     }
 
     async validateUser(userId, userRepository) {
+        
         const userCreateService = new UserCreateService(userRepository);
         const isUserValid = await userCreateService.getById(userId);
 

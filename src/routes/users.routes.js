@@ -6,7 +6,7 @@ const usersController = require('../controllers/UsersController');
 const usersRoutes = Router();
 
 usersRoutes.post('/', usersController.create);
+usersRoutes.get('/favorites/:userId', ensureAuthentication, usersController.favoriteDishesByUser);
 usersRoutes.post('/favorites', ensureAuthentication, usersController.setFavorite);
-usersRoutes.get('/favorites', ensureAuthentication, usersController.favoriteDishesByUser);
 
 module.exports = usersRoutes;

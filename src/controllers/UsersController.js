@@ -7,13 +7,12 @@ class UsersController{
     async create(req, res){
         const { name, email, password, isAdmin } = req.body;
 
-        const dishRepository = new DishRepository();
         const userRepository = new UserRepository();
         const userCreateService = new UserCreateService(userRepository);
 
         await userCreateService.create({name, email, password, isAdmin});
         
-        return res.status(201).json();
+        return res.status(201).json({message: 'User created successfully'});
     }
 
     async setFavorite(req, res){
@@ -33,7 +32,7 @@ class UsersController{
     }
 
     async favoriteDishesByUser(req, res){
-        const { userId } = req.body;
+        const { userId } = req.params;
 
         const userRepository = new UserRepository();
         const favoriteCreateService = new FavoriteCreateService(userRepository);
@@ -42,7 +41,7 @@ class UsersController{
             const dishes = await favoriteCreateService.indexByUser(userId);
 
             if(!dishes.length)
-                return res.json({message: 'The user have not added favorite dishes'});
+                return res.status(400   ).json({message: 'The user have not added favorite dishes'});
 
             return res.json({...dishes});
         } catch (error) {

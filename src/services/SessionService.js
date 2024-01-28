@@ -10,6 +10,9 @@ class SessionService{
     }
 
     async execute({ email, password }){
+
+        if(!email || !password)
+            throw new AppError('The email and/or password were not sent');
         
         const user = await this.userRepository.findByEmail(email);
 

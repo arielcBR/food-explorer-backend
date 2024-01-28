@@ -5,12 +5,14 @@ const cors = require('cors');
 
 const AppError = require('./utils/AppError');
 const routes = require('./routes');
+const {swaggerDocs} = require('./documentation/swagger')
 
 const app = express();
 
 // middlewares
 app.use(cors());
 app.use(express.json());
+swaggerDocs(app);
 app.use(routes);
 app.use((error, req, res, next) => {
 
@@ -28,5 +30,6 @@ app.use((error, req, res, next) => {
       message: 'Internal server error'
     })
   });
+
 
 module.exports = app;

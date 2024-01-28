@@ -10,8 +10,8 @@ const ensureIsAdmin = require('../middlewares/ensureIsAdmin');
 const orderController = require('../controllers/OrderController');
 
 orderRoutes.post('/', ensureAuthentication, orderController.create);
-orderRoutes.get('/', ensureAuthentication, orderController.get);
-orderRoutes.get('/:userId', ensureAuthentication, orderController.index);
+orderRoutes.get('/', ensureAuthentication, orderController.getOrderDetails);
+orderRoutes.get('/:userId', ensureAuthentication, orderController.getUsersOrders);
 orderRoutes.patch('/', ensureAuthentication, ensureIsAdmin, orderController.update);
 
 

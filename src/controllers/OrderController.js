@@ -17,9 +17,9 @@ class OrderController{
         res.status(201).json({order_id: orderId});
     }
 
-    async index(req, res){
+    async getUsersOrders(req, res){
         const { userId } = req.params;
-
+        
         const dishRepository = new DishRepository();
         const userRepository = new UserRepository ();
         const orderRepository = new OrderRepository();
@@ -30,7 +30,7 @@ class OrderController{
         res.json(ordersId);
     }
 
-    async get(req, res){
+    async getOrderDetails(req, res){
         const { orderId } = req.query;
 
         const dishRepository = new DishRepository();
@@ -41,7 +41,7 @@ class OrderController{
         const ordersDetails = await orderCreateService.getOrderDetails(orderId);
 
         if(!ordersDetails.length) 
-            return res.json({message: 'Order is empty'});
+            return res.status(404).json({message: 'Order does not found!'});
 
         res.json(ordersDetails);
     }

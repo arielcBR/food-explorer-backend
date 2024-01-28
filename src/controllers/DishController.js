@@ -6,9 +6,15 @@ class DishController{
 
     async create(req, res, next){
         try {
-            const dish  = JSON.parse(req.body.bodyDish);
+            const bodyDish = req.body.bodyDish;
             const dishPicture = req.files;
+
+            if(!bodyDish && dishPicture)
+                throw new AppError('Bad request, nothing was sent!');
+
+            const dish  = JSON.parse(bodyDish);
             let picturePath;
+            
 
             !dishPicture.length ? picturePath = 'Standard image' : picturePath = dishPicture[0].path;
 
