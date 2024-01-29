@@ -65,6 +65,16 @@ $ npm run seeds
 $ npm run dev
 ```
 
+### The documentation for existing endpoints and their respective methods will be available at http://localhost:PORT/api-docs.
+```bash
+http://localhost:PORT/api-docs
+```
+
+### Unit tests can be executed using the command.:
+```bash
+$ npm test
+```
+
 ### This API was hosted directly on Render.
 
 #### Note: As it is hosted on a free service, the application 'hibernates' after 15 minutes of inactivity. 
