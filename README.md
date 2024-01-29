@@ -65,7 +65,7 @@ $ npm run seeds
 $ npm run dev
 ```
 
-### The documentation for existing endpoints and their respective methods will be available at http://localhost:PORT/api-docs.
+### The documentation for existing endpoints and their respective methods will be available at:
 ```bash
 http://localhost:PORT/api-docs
 ```
