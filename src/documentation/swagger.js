@@ -8,11 +8,6 @@ const PORT = process.env.PORT || 3000;
 const options = {
     definition: {
         openapi: '3.0.0',
-        // servers: [
-        //     {
-        //         url: `http://localhost:${PORT}/api-docs`
-        //     }
-        // ],
         info: { 
             title: 'Food explorer API',
             version: '1.0.0',
@@ -27,7 +22,7 @@ const options = {
     apis: ['../routes/*.js'] 
 };
 
-// Atualiza dinamicamente a URL do servidor no documento Swagger
+// Update dynamically the server URL in the Swagger's document
 if (swaggerDocument.servers && Array.isArray(swaggerDocument.servers)) {
     swaggerDocument.servers.forEach(server => {
         server.url = `http://localhost:${PORT}/api-docs`
