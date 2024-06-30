@@ -6,7 +6,6 @@ const FavoriteCreateService = require('../services/FavoriteService');
 class UsersController{
     async create(req, res){
         const { name, email, password, isAdmin } = req.body;
-
         const userRepository = new UserRepository();
         const userCreateService = new UserCreateService(userRepository);
 
