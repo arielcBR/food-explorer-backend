@@ -168,24 +168,21 @@ describe('PATCH /dishes', () => {
 
     });
 
-    it('Should pass when updating a dish with a new picture and a new body', async () => {
-        const newDishPicture = 'cheesecake-frutos-rojos.png';
-
+    it('Should pass when updating a dish with a new picture', async () => {
         const updateRequest = {
             name: "Cheesecake de frutos rojos",
             category: "postre",
             price: 19.99,
             description: "El tradicional postre, cremoso y rico",
-            ingredients: ["arandonos", "queso crema", "frutillas"]
+            ingredients: ["arandonos", "queso crema", "frutillas"],
+            picture: 'cheesecake-frutos-rojos.png'
         };
 
-        await dishService.update(dishId, newDishPicture, updateRequest);
+        await dishService.update(dishId, updateRequest);
         
         const updatedDish = await dishService.getById(dishId);
 
-        expect(updatedDish.name).toBe(updateRequest.name);
-        expect(updatedDish.picture).toBe(newDishPicture.path);
-        
+        expect(updatedDish.picture).toBe(updateRequest.picture);
     });
 
     it('Should pass when updating a dish without a new picture and a new body', async () => {
@@ -197,29 +194,11 @@ describe('PATCH /dishes', () => {
             ingredients: ["arandonos", "queso crema", "frutillas"]
         };
 
-        await dishService.update(dishId, null, updateRequest);
+        await dishService.update(dishId, updateRequest);
         
         const updatedDish = await dishService.getById(dishId);
 
         expect(updatedDish.price).toBe(updateRequest.price);
-    });
-
-    it('Should pass when updating a dish with a new picture and no body', async () => {
-        const updateRequest = {
-            path: 'new_photo.jpg'
-        };
-
-        await dishService.update(dishId, updateRequest, null);
-        
-        const updatedDish = await dishService.getById(dishId);
-        console.log(updatedDish)
-        // expect(updatedDish.picture).toBe(updateRequest);
-    });
-
-    it('Should pass when updating a dish without a new picture and body', async () => {
-        await expect(async() => await dishService.update(dishId, null, null))
-        .rejects.toMatchObject({message: 'No updates provided. Please provide a new picture and/or updated dish details.'});
-        
     });
 });
 

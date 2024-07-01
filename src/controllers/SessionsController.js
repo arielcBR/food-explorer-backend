@@ -9,7 +9,6 @@ class SessionController{
         const sessionCreateService = new SessionCreateService(userRepository);
 
         const token = await sessionCreateService.execute({email, password});
-
         return res.status(201).json(token);
     }
 }

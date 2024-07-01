@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const AppError = require('./utils/AppError');
 const routes = require('./routes');
+const uploadConfig = require('./configs/upload')
 const {swaggerDocs} = require('./documentation/swagger')
 
 const app = express();
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 swaggerDocs(app);
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
 app.use(routes);
 app.use((error, req, res, next) => {
 

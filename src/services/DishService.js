@@ -73,53 +73,43 @@ class DishService{
 
     }
 
-    async update(dishId, newDishPicture, dishUpdated){
-        if(!newDishPicture && !dishUpdated)
-            throw new AppError('No updates provided. Please provide a new picture and/or updated dish details.');
-        
+    async update(dishId, dishUpdated){
         const dish = await this.getById(dishId);
 
         if(!dish)
-            throw new AppError('Dish not found!', 404);
-        
-        if(newDishPicture){
-            dish.picture = newDishPicture.path;
+            throw new AppError('Dish not found!', 404);      
+
+        // Validations
+        if(dishUpdated.name){
+            const isNewNameValid = InputChecker.text(dishUpdated.name);
+
+            if(!isNewNameValid)
+                throw new AppError('The name is invalid!');
+            dish.name = dishUpdated.name;
         }
-        
 
-        if(dishUpdated){
-            if(dishUpdated.name){
-                const isNewNameValid = InputChecker.text(dishUpdated.name);
-                if(isNewNameValid)
-                    dish.name = dishUpdated.name;
-                else 
-                    throw new AppError('The name is invalid!');
-            }
-    
-            if(dishUpdated.category){
-                const isNewCategoryValid = InputChecker.text(dishUpdated.category);
-                if(isNewCategoryValid)    
-                    dish.category = dishUpdated.category;
-                else 
-                    throw new AppError('The category is invalid!');
-            }
-    
-            if(dishUpdated.price){
-                const isNewPriceValid = InputChecker.price(dishUpdated.price);
-                if(isNewPriceValid)
-                    dish.price = dishUpdated.price;
-                else 
-                    throw new AppError('The price is invalid!');
-            }
-    
-            if(dishUpdated.description)
-                dish.description = dishUpdated.description;
+        if(dishUpdated.category){
+            const isNewCategoryValid = InputChecker.text(dishUpdated.category);
+            if(!isNewCategoryValid)    
+                throw new AppError('The category is invalid!');
+            dish.category = dishUpdated.category;
+        }
 
-                if(dishUpdated.ingredients){
-                    if(dishUpdated.ingredients.length){
-                        await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
-                    }
-                }
+        if(dishUpdated.price){
+            const isNewPriceValid = InputChecker.price(dishUpdated.price);
+            if(!isNewPriceValid)
+                throw new AppError('The price is invalid!');
+            dish.price = dishUpdated.price;
+        }
+
+        if(dishUpdated.picture){
+            dish.picture = dishUpdated.picture
+        }
+
+        if(dishUpdated.ingredients){
+            if(dishUpdated.ingredients.length){
+                await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
+            }
         }
         
         await this.dishRepository.updateDish(dish);

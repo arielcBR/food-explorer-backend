@@ -68,44 +68,23 @@ class DishController{
     }
 
     async update(req, res, next){
-        try{
-            const { dishId } =  req.params;
-            const [ dishPicture ] = req.files;
-            const { bodyDish } = req.body;
+        const { dishId } =  req.params;
+        const updatedDish = req.body;
 
-            const dishRepository = new DishRepository();
-            const dishCreateService = new DishCreateService(dishRepository);
-
-            let status;
-            
-            if (dishPicture && bodyDish) {
-                const patch = JSON.parse(bodyDish);
-                status = await dishCreateService.update(dishId, dishPicture, patch);
-            }
-
-            else if (!dishPicture && bodyDish) {
-                const patch = JSON.parse(bodyDish);
-                status = await dishCreateService.update(dishId, null, patch);
-            }
-
-            else if (dishPicture && !bodyDish) {
-                status = await dishCreateService.update(dishId, dishPicture, {});
-            }
-
-            else 
-                status = false;
-
-            if(!status){
-                throw new AppError('The update could not be done!');
-            }
-
-            res.json({message: 'Dish updated!'});
-
+        if (!updatedDish) {
+            throw new AppError('The update could not be done!');
         }
-        catch (error) {
-            console.error(error);
-            next(error);
-        }
+
+        const dishRepository = new DishRepository();
+        const dishCreateService = new DishCreateService(dishRepository);
+
+        const response = await dishCreateService.update(dishId, updatedDish);
+
+        if(response)
+            res.json({message: 'Dish updated successfully!'});
+        else
+            throw new AppError('The update failed!', 500);
+ 
     }
 
     async delete(req, res, next){
