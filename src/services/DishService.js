@@ -82,8 +82,10 @@ class DishService{
         if(!dish)
             throw new AppError('Dish not found!', 404);
         
-        if(newDishPicture)
-            dish.picture = newDishPicture;
+        if(newDishPicture){
+            dish.picture = newDishPicture.path;
+        }
+        
 
         if(dishUpdated){
             if(dishUpdated.name){
@@ -113,9 +115,11 @@ class DishService{
             if(dishUpdated.description)
                 dish.description = dishUpdated.description;
 
-            if(dishUpdated.ingredients.length){
-                await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
-            }
+                if(dishUpdated.ingredients){
+                    if(dishUpdated.ingredients.length){
+                        await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
+                    }
+                }
         }
         
         await this.dishRepository.updateDish(dish);

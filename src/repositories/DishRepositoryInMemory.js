@@ -83,7 +83,7 @@ class DishRepositoryInMemory{
             picture,
             updated_at: new Date(),
         };
-    
+        
         this.dishes = this.dishes.map(dish => (dish.id === id ? dishUpdated : dish));
         
         return dishUpdated;
