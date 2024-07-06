@@ -16,11 +16,11 @@ const dishes = [
 			"picturePath": "standard_image.png"
 		},
 		{
-			"name": "Pizza de Muçarela",
+			"name": "Pizza de Mussarela",
 			"category": "meal",
 			"price": 49.99,
-			"description": "Pizza crocante com molho de tomate e muçarela derretida.",
-			"ingredients": ["massa", "molho de tomate", "muçarela", "orégano"],
+			"description": "Pizza crocante com molho de tomate e mussarela derretida.",
+			"ingredients": ["massa", "molho de tomate", "mussarela", "orégano"],
 			"picturePath": "standard_image.png"
 		},
 		{

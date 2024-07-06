@@ -40,6 +40,11 @@ class DishController{
     
             const dish = await dishCreateService.getById(dishId);
             
+            if(dish){
+                const ingredients = await dishCreateService.getIngredientsByDishId(dish.id);
+                dish.ingredients = [...ingredients];
+            }
+            
             if(!dish) {
                 throw new AppError('Dish not found', 404);
             }

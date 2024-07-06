@@ -111,7 +111,7 @@ class DishRepository{
         const ingredients = await knex('dish_ingredients')
         .where({ dish_id: id })
         .join('ingredients', 'dish_ingredients.ingredient_id', 'ingredients.id')
-        .select('ingredients.id');
+        .select('ingredients.id', 'ingredients.name');
         
         return ingredients;
     }

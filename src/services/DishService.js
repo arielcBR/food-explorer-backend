@@ -127,6 +127,11 @@ class DishService{
         await this.dishRepository.createDishIngredients(dishId, newIngredients);
     }
 
+    async getIngredientsByDishId(id){
+        const ingredients = await this.dishRepository.getDishIngredients(id);
+        return ingredients ? ingredients : [];
+    }
+
     async searchDishes(dish){
         const allDishes = await this.dishRepository.searchDishes(dish);
         
