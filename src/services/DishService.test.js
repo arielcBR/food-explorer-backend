@@ -181,6 +181,7 @@ describe('PATCH /dishes', () => {
         await dishService.update(dishId, updateRequest);
         
         const updatedDish = await dishService.getById(dishId);
+        console.log(updatedDish)
 
         expect(updatedDish.picture).toBe(updateRequest.picture);
     });

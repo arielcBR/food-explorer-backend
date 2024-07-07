@@ -7,7 +7,7 @@ const OrderCreateService = require('../../../services/OrderService')
 
 
 exports.seed = async function(knex) {
-  const [user] = await knex('users').where({id: 1});
+  const user = await knex('users').where({isAdmin: true}).first();
   const dishes = await knex('dishes');
 
   const dishRepository = new DishRepository();

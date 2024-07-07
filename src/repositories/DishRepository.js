@@ -8,24 +8,19 @@ class DishRepository{
             transaction = await knex.transaction();
 
             const [dishId] = await transaction('dishes').insert({name, category, price, description, picture});
-
             for (const ingredient of ingredients) {
-                if (!ingredient.length) 
+                if (!ingredient.name.length) 
                     continue;
     
-                // Check if the ingredient already exists in the DB
-                const [ingredientExists] = await transaction('ingredients').where({ name: ingredient });
-                // If it does not exist, then add the new ingredient to the DB
+                const ingredientExists = await transaction('ingredients').where({ name: ingredient.name }).first();
+
                 if (!ingredientExists) {
-                    const [newIngredientId] = await transaction('ingredients').insert({ name: ingredient.toLowerCase() });
-                    
+                    const [newIngredientId] = await transaction('ingredients').insert({ name: ingredient.name.toLowerCase() });
                     await transaction('dish_ingredients').insert({
                         dish_id: dishId, 
                         ingredient_id: newIngredientId
                     });
                 } 
-                
-                // If it exists, then link to the dish and add to the DB
                 else {
                     await transaction('dish_ingredients').insert({
                         dish_id: dishId, 
@@ -42,8 +37,15 @@ class DishRepository{
             transaction.rollback();
             return false;
         }
+    }
 
-
+    async createIngredient(ingredient){
+        try {
+            const [newIngredientId] = await knex('ingredients').insert({ name: ingredient.name.toLowerCase() });
+            return newIngredientId;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async getAllDishes(){
@@ -63,7 +65,8 @@ class DishRepository{
 
     async updateDish({id, name, category, price, description, picture}){
 
-        const status = await knex('dishes')
+        try {
+            const status = await knex('dishes')
             .update({
             name, 
             category, 
@@ -74,20 +77,22 @@ class DishRepository{
             })
             .where({id: id});
 
-        return; 
+            return; 
+        } 
+        catch (error) {
+            console.log(error)
+        }
     }
 
     async createDishIngredients(dishId, ingredients){
         for (const ingredient of ingredients) {
-            if (!ingredient.length) 
-                continue;
 
             // Check if the ingredient already exists in the DB
-            const [ingredientExists] = await knex('ingredients').where({ name: ingredient });
+            const ingredientExists = await this.getByIngredientName(ingredient.name);
 
             // If it does not exist, then add the new ingredient to the DB
             if (!ingredientExists) {
-                const [newIngredientId] = await knex('ingredients').insert({ name: ingredient });
+                const newIngredientId = await this.createIngredient(ingredient.name);
 
                 await knex('dish_ingredients').insert({
                     dish_id: dishId, 
@@ -116,8 +121,17 @@ class DishRepository{
         return ingredients;
     }
 
+    async getByIngredientName(name){
+        const ingredient = await knex('ingredients')
+        .where({ name: name })
+        .select('id', 'name')
+        .first();
+        
+        return ingredient;
+    }
+
     async deleteDishIngredients(id){
-        await knex('dish_ingredients').delete().where({ingredient_id: id});
+        await knex('dish_ingredients').delete().where({dish_id: id});
         return;
     }
 

@@ -6,7 +6,7 @@ class DishService{
         this.dishRepository = dishRepository;
     }
 
-    async create({name, category, price, description, ingredients, picturePath}){
+    async create({name, category, price, description, ingredients, picture}){
 
         const isNameValid = InputChecker.text(name);
         const isCategoryValid = InputChecker.text(category);
@@ -25,14 +25,22 @@ class DishService{
         if(!areIngredientsValid)
             throw new AppError('The ingredient list cannot be empty!');
 
-        const dishCreated = await this.dishRepository.createDish({
+        
+
+        const dish = {
             name: name.toLowerCase(), 
             category: category.toLowerCase(),
             price, 
             description: description.toLowerCase(), 
             ingredients,
-            picture: picturePath
-        });
+            picture
+        }
+
+        const dishCreated = await this.dishRepository.createDish(dish);
+
+        if(!dishCreated){
+            throw new AppError('It was not possible to save the dish into the database!', 500);
+        }
         
         return dishCreated;
     }
@@ -105,25 +113,34 @@ class DishService{
         if(dishUpdated.picture){
             dish.picture = dishUpdated.picture
         }
-
+        
         if(dishUpdated.ingredients){
-            if(dishUpdated.ingredients.length){
-                await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
-            }
+            await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
         }
+
+        dish.description = dishUpdated.description;
         
         await this.dishRepository.updateDish(dish);
         
         return true;
     }
 
-    async updateDishIngredients(dishId, newIngredients){
-        const ingredients = await this.dishRepository.getDishIngredients(dishId);
-
-        for (const ingredient of ingredients) {
-            const ingredientToDelete = await this.dishRepository.deleteDishIngredients(ingredient.id);
+    async updateDishIngredients(dishId, newIngredients) {
+        await this.dishRepository.deleteDishIngredients(dishId);
+    
+        for (const ingredient of newIngredients) {
+            if (ingredient.id === null) {
+                const data = await this.dishRepository.getByIngredientName(ingredient.name);
+                
+                if (data && data.id) {
+                    ingredient.id = data.id;
+                }
+                else {
+                    const newIngredient = await this.dishRepository.createIngredient({ name: ingredient.name });
+                    ingredient.id = newIngredient;
+                }
+            }
         }
-
         await this.dishRepository.createDishIngredients(dishId, newIngredients);
     }
 

@@ -8,20 +8,24 @@ class DishController{
         try {
             const bodyDish = req.body.bodyDish;
             const dishPicture = req.files;
+            let pictureName;
 
-            if(!bodyDish && dishPicture)
-                throw new AppError('Bad request, nothing was sent!');
+            if(!bodyDish)
+                throw new AppError('Bad request, try it again!');
 
             const dish  = JSON.parse(bodyDish);
-            let picturePath;
             
-
-            !dishPicture.length ? picturePath = 'Standard image' : picturePath = dishPicture[0].path;
+            if(dishPicture[0]){
+                pictureName = dishPicture[0].originalname
+            }
+            else{
+                pictureName = 'standard_image.png';
+            }
 
             const dishRepository = new DishRepository();
             const dishCreateService = new DishCreateService(dishRepository);
-
-            const dishCreated = await dishCreateService.create({...dish, picturePath});
+            
+            const dishCreated = await dishCreateService.create({...dish, pictureName});
 
             res.status(201).json({dishCreated});
           } 
@@ -29,7 +33,6 @@ class DishController{
             console.error(error);
             next(error);
         }
-        
     }
 
     async getById(req, res, next){
