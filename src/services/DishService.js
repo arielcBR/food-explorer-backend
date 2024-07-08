@@ -1,5 +1,6 @@
 const AppError = require('../utils/AppError');
 const InputChecker = require('../utils/InputChecker');
+const diskStorage = require('../providers/DiskStorage')
 
 class DishService{
     constructor(dishRepository){
@@ -84,9 +85,6 @@ class DishService{
     async update(dishId, dishUpdated){
         const dish = await this.getById(dishId);
 
-        if(!dish)
-            throw new AppError('Dish not found!', 404);      
-
         // Validations
         if(dishUpdated.name){
             const isNewNameValid = InputChecker.text(dishUpdated.name);
@@ -110,6 +108,10 @@ class DishService{
             dish.price = dishUpdated.price;
         }
 
+        if(dishUpdated.description){
+            dish.description = dishUpdated.description;
+        }
+
         if(dishUpdated.picture){
             dish.picture = dishUpdated.picture
         }
@@ -118,8 +120,6 @@ class DishService{
             await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
         }
 
-        dish.description = dishUpdated.description;
-        
         await this.dishRepository.updateDish(dish);
         
         return true;

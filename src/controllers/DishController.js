@@ -1,6 +1,7 @@
 const DishRepository = require('../repositories/DishRepository');
 const DishCreateService = require('../services/DishService');
 const AppError = require('../utils/AppError');
+const diskStorage = require('../providers/DiskStorage')
 
 class DishController{
 
@@ -76,15 +77,23 @@ class DishController{
     }
 
     async update(req, res, next){
-        const { dishId } =  req.params;
-        const updatedDish = req.body;
-
-        if (!updatedDish) {
-            throw new AppError('The update could not be done!');
-        }
-
         const dishRepository = new DishRepository();
         const dishCreateService = new DishCreateService(dishRepository);
+
+        const { dishId } = req.params;
+        const updatedDish  = JSON.parse(req.body.updatedDish);
+
+        if(req.files[0]){
+            // Delete currently picture
+            const dish = await dishCreateService.getById(dishId)
+            if(dish.picture && dish.picture !== "standard_image.png")
+                await diskStorage.deleteFile(dish.picture)
+            
+            // Save new picture 
+            const dishPictureFilename = req.files[0].filename;  
+            const filename = await diskStorage.saveFile(dishPictureFilename)
+            updatedDish.picture = filename;
+        }
 
         const response = await dishCreateService.update(dishId, updatedDish);
 
