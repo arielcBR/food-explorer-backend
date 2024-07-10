@@ -1,5 +1,6 @@
 const AppError = require('../utils/AppError');
 const InputChecker = require('../utils/InputChecker');
+const diskStorage = require('../providers/DiskStorage')
 
 class DishService{
     constructor(dishRepository){
@@ -70,6 +71,8 @@ class DishService{
             throw new AppError('Dish not found!', 404);
 
         else{
+            await diskStorage.deleteFile(dish.picture)
+
             const status = await this.dishRepository.deleteDish(id);
             if (!status)
                 throw new AppError('Dish could not be deleted!');
