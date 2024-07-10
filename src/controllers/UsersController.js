@@ -40,9 +40,9 @@ class UsersController{
             const dishes = await favoriteCreateService.indexByUser(userId);
 
             if(!dishes.length)
-                return res.status(400   ).json({message: 'The user have not added favorite dishes'});
+                return res.json([]);
 
-            return res.json({...dishes});
+            return res.json(dishes);
         } catch (error) {
             console.error(error);
             return res.status(400).json({message: 'It is not possible to show it now'});

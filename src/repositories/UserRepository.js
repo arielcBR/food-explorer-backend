@@ -51,12 +51,7 @@ class UserRepository{
             return [];
         }
 
-        const dishIds = userFavoriteDishes.map(item => item.dish_id);
-
-        const dishes = await knex('dishes')
-        .whereIn('id', dishIds);
-
-        return dishes;
+        return userFavoriteDishes;
     }
 
 }
