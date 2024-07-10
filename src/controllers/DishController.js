@@ -7,28 +7,25 @@ class DishController{
 
     async create(req, res, next){
         try {
-            const bodyDish = req.body.bodyDish;
-            const dishPicture = req.files;
-            let pictureName;
-
-            if(!bodyDish)
-                throw new AppError('Bad request, try it again!');
-
-            const dish  = JSON.parse(bodyDish);
-            
-            if(dishPicture[0]){
-                pictureName = dishPicture[0].originalname
-            }
-            else{
-                pictureName = 'standard_image.png';
-            }
-
             const dishRepository = new DishRepository();
             const dishCreateService = new DishCreateService(dishRepository);
-            
-            const dishCreated = await dishCreateService.create({...dish, pictureName});
 
-            res.status(201).json({dishCreated});
+            const bodyDish  = JSON.parse(req.body.bodyDish);  
+            
+            if(!bodyDish)
+                throw new AppError('Bad request, try it again!');
+            
+            if(req.files[0]){
+                const dishPictureFilename = req.files[0].filename;  
+                const filename = await diskStorage.saveFile(dishPictureFilename);
+                bodyDish.picture = filename;
+            }
+            else{
+                bodyDish.picture = 'standard_image.png';
+            }
+
+            const dishCreated = await dishCreateService.create({...bodyDish});
+            res.status(200).json({dishCreated});
           } 
         catch (error) {
             console.error(error);

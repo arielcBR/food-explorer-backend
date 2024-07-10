@@ -1,6 +1,5 @@
 const AppError = require('../utils/AppError');
 const InputChecker = require('../utils/InputChecker');
-const diskStorage = require('../providers/DiskStorage')
 
 class DishService{
     constructor(dishRepository){
@@ -25,8 +24,6 @@ class DishService{
             throw new AppError('The description is not valid!');
         if(!areIngredientsValid)
             throw new AppError('The ingredient list cannot be empty!');
-
-        
 
         const dish = {
             name: name.toLowerCase(), 
@@ -84,7 +81,7 @@ class DishService{
 
     async update(dishId, dishUpdated){
         const dish = await this.getById(dishId);
-
+        
         // Validations
         if(dishUpdated.name){
             const isNewNameValid = InputChecker.text(dishUpdated.name);
@@ -117,31 +114,12 @@ class DishService{
         }
         
         if(dishUpdated.ingredients){
-            await this.updateDishIngredients(dish.id, dishUpdated.ingredients);
+            dish.ingredients = dishUpdated.ingredients;
         }
 
         await this.dishRepository.updateDish(dish);
         
         return true;
-    }
-
-    async updateDishIngredients(dishId, newIngredients) {
-        await this.dishRepository.deleteDishIngredients(dishId);
-    
-        for (const ingredient of newIngredients) {
-            if (ingredient.id === null) {
-                const data = await this.dishRepository.getByIngredientName(ingredient.name);
-                
-                if (data && data.id) {
-                    ingredient.id = data.id;
-                }
-                else {
-                    const newIngredient = await this.dishRepository.createIngredient({ name: ingredient.name });
-                    ingredient.id = newIngredient;
-                }
-            }
-        }
-        await this.dishRepository.createDishIngredients(dishId, newIngredients);
     }
 
     async getIngredientsByDishId(id){

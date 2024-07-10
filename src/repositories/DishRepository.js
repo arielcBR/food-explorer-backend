@@ -9,13 +9,16 @@ class DishRepository{
 
             const [dishId] = await transaction('dishes').insert({name, category, price, description, picture});
             for (const ingredient of ingredients) {
-                if (!ingredient.name.length) 
+                if (!ingredient.name || ingredient.name.trim() === '') {
                     continue;
-    
-                const ingredientExists = await transaction('ingredients').where({ name: ingredient.name }).first();
+                }
+                
+                const ingredientName = ingredient.name.toLowerCase().trim();
 
+                const ingredientExists = await transaction('ingredients').where({ name: ingredientName }).first();
+                
                 if (!ingredientExists) {
-                    const [newIngredientId] = await transaction('ingredients').insert({ name: ingredient.name.toLowerCase() });
+                    const [newIngredientId] = await transaction('ingredients').insert({ name: ingredientName });
                     await transaction('dish_ingredients').insert({
                         dish_id: dishId, 
                         ingredient_id: newIngredientId
@@ -34,14 +37,14 @@ class DishRepository{
         }
         catch(error){
             console.error(error);
-            transaction.rollback();
+            await transaction.rollback();
             return false;
         }
     }
 
     async createIngredient(ingredient){
         try {
-            const [newIngredientId] = await knex('ingredients').insert({ name: ingredient.name.toLowerCase() });
+            const [newIngredientId] = await knex('ingredients').insert({ name: ingredient.name });
             return newIngredientId;
         } catch (error) {
             console.log(error);
@@ -63,23 +66,43 @@ class DishRepository{
         return dish;
     }
 
-    async updateDish({id, name, category, price, description, picture}){
-
+    async updateDish({id, name, category, price, description, picture, ingredients}){
+        let transaction;
+        
         try {
-            const status = await knex('dishes')
-            .update({
-            name, 
-            category, 
-            price, 
-            description, 
-            picture,
-            updated_at: knex.fn.now()
-            })
+            transaction = await knex.transaction();
+            
+            await transaction('dishes')
+            .update({ name, category, price, description, picture, updated_at: knex.fn.now() })
             .where({id: id});
+            
+            await transaction('dish_ingredients').delete().where({dish_id: id})
+            
+            for (const ingredient of ingredients) {
+                if (!ingredient.name || ingredient.name.trim() === '') {
+                    continue;
+                }
 
+                const ingredientName = ingredient.name.toLowerCase().trim();
+                
+                const ingredientExists = await transaction('ingredients').where({ name: ingredientName }).first();
+                if (!ingredientExists) {
+                    const [newIngredientId] = await transaction('ingredients').insert({ name: ingredientName }).returning('id');
+                    await transaction('dish_ingredients').insert({
+                        dish_id: id, 
+                        ingredient_id: newIngredientId[0]
+                    });
+                } 
+                else 
+                    await transaction('dish_ingredients').insert({ dish_id: id, ingredient_id: ingredientExists.id });
+                
+            }
+
+            await transaction.commit();
             return; 
         } 
         catch (error) {
+            await transaction.rollback();
             console.log(error)
         }
     }
