@@ -6,15 +6,12 @@ class FavoriteService{
         this.dishRepository = dishRepository;
     }
 
-    async setFavoriteStatus(userId, dishId, favoriteStatus){
+    async setFavoriteStatus(userId, dishId){
         if(!userId)
             throw new AppError('User not sent!');
         
         if(!dishId)
             throw new AppError('Dish not sent!');
-    
-        if(favoriteStatus === undefined)
-            throw new AppError('Favorite status not sent!');
 
         const isUserValid = await this.userRepository.findById(userId);
         
@@ -25,25 +22,17 @@ class FavoriteService{
         
         if(!isDishValid)
             throw new AppError('Dish not found!');
-        
-        const favoriteDish = await this.userRepository.getFavorite(userId, dishId);
+    
+        const isFavoriteDish = await this.userRepository.getFavorite(userId, dishId);
 
-        if (!favoriteDish) {
-            if (!favoriteStatus) 
-                return 'Anything has changed!';
-
-            await this.userRepository.setFavorite(userId, dishId);
-            return 'The dish has been favorited!';
+        if (!isFavoriteDish) {
+            await this.userRepository.addFavorite(userId, dishId);
+            return;
         } 
         else {
-            if (favoriteStatus) 
-                return 'Anything has changed!';
-
-            await this.userRepository.resetFavorite(userId, dishId);
-            return 'The dish has been unfavorited!';
+            await this.userRepository.deleteFavorite(userId, dishId);
+            return;
         }
-        
-
     }
 
     async indexByUser(userId){

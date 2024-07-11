@@ -14,16 +14,16 @@ class UsersController{
         return res.status(201).json({message: 'User created successfully'});
     }
 
-    async setFavorite(req, res){
-        const { userId, dishId, favorite } = req.body;
+    async toggleFavorite(req, res){
+        const { userId, dishId } = req.body;
 
         const dishRepository = new DishRepository();
         const userRepository = new UserRepository();
         const favoriteService = new FavoriteCreateService(userRepository, dishRepository);
 
         try {
-            const messageStatus = await favoriteService.setFavoriteStatus(userId, dishId, favorite)
-            res.json({message: messageStatus });
+            await favoriteService.setFavoriteStatus(userId, dishId);
+            res.json({});
         } catch (error) {
             console.error(error);
             return res.status(400).json({message: 'It was not possible to favorite the dish!'});

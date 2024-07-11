@@ -7,6 +7,6 @@ const usersRoutes = Router();
 
 usersRoutes.post('/', usersController.create);
 usersRoutes.get('/favorites/:userId', ensureAuthentication, usersController.favoriteDishesByUser);
-usersRoutes.post('/favorites', ensureAuthentication, usersController.setFavorite);
+usersRoutes.post('/favorites', ensureAuthentication, usersController.toggleFavorite);
 
 module.exports = usersRoutes;
