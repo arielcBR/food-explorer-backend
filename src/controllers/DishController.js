@@ -83,7 +83,7 @@ class DishController{
         if(req.files[0]){
             // Delete currently picture
             const dish = await dishCreateService.getById(dishId)
-            if(dish.picture && dish.picture !== "standard_image.png")
+            if(dish.picture !== "standard_image.png")
                 await diskStorage.deleteFile(dish.picture)
             
             // Save new picture 
@@ -134,7 +134,7 @@ class DishController{
             if(!dishes.length)
                 return res.json({message: 'Nothing found!'})
 
-            return res.json({dishes : dishes});
+            return res.json(dishes);
         } 
     }
 }
