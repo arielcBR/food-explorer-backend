@@ -40,27 +40,37 @@ class UserRepositoryInMemory{
     
         return this.user_favorite_dishes;
     }
-    
 
-    async setFavorite(user_id, dish_id) {
-        const newFavoriteDish = { 
+    async addFavorite(user_id, dish_id) {
+        const newFavoriteDish = {
             id: Math.floor(Math.random() * 1000) + 1,
-            user_id, 
-            dish_id, 
-            created_at: new Date(), 
-            updated_at: new Date() 
+            userId: user_id,
+            dishId: dish_id
         };
-    
+
         this.user_favorite_dishes.push(newFavoriteDish);
-    
-        return newFavoriteDish;
+
+        return newFavoriteDish.id;
     }
+
+    async deleteFavorite(user_id, dish_id) {
+        const initialLength = this.user_favorite_dishes.length;
+    
+        this.user_favorite_dishes = this.user_favorite_dishes.filter(item => !(item.userId === user_id && item.dishId === dish_id));
+    
+        if (this.user_favorite_dishes.length < initialLength) {
+            return true; 
+        } else {
+            return false;
+        }
+    }
+    
 
     async getFavorite(user_id, dish_id) {
-        const favoriteDish = this.user_favorite_dishes.find(item => item.user_id === user_id && item.dish_id === dish_id);
-    
+        const favoriteDish = this.user_favorite_dishes.find(item => item.userId === user_id && item.dishId === dish_id);
         return favoriteDish || false;
     }
+    
     
 }
 

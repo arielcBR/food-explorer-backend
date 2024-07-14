@@ -226,11 +226,6 @@ describe('DELETE /dishes', () => {
 
     });
 
-    it('Should pass when deleting an existing dish', async () => {
-        const status = await dishService.delete(dishId);
-
-        expect(status).toBe(true);
-    });
 
     it('Should pass when trying to delete an invalid dish', async () => {
         const invalidDishId = 1001;

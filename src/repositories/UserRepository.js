@@ -53,7 +53,7 @@ class UserRepository{
     async deleteFavorite(user_id, dish_id){
         try {
             await knex('user_favorite_dishes').delete().where({user_id, dish_id});
-            return;
+            return true;
         } catch (error) {
             console.log(error);
         }

@@ -42,42 +42,9 @@ describe('POST /favorite', () => {
         dish = dishBody.body;
     });
 
-    it('Should pass when updating the favorited status as true (the dish does not exist yet)', async () => {
-        const favorite = true;
-
-        const response = await favoriteService.setFavoriteStatus(user.id, dish.id, favorite);
-        expect(response).toBe('The dish has been favorited!');
-    });
-
-    it('Should pass when updating the favorited status as false (the dish does not exist yet)', async () => {
-        const favorite = false;
-
-        const response = await favoriteService.setFavoriteStatus(user.id, dish.id, favorite);
-        expect(response).toBe('Anything has changed!');
-    });
-
-    it('Should pass when updating the favorited status as false (the dish was already favorited)', async () => {
-        let favorite = true;
-        await favoriteService.setFavoriteStatus(user.id, dish.id, favorite);
-        favorite = false;
-
-        const response = await favoriteService.setFavoriteStatus(user.id, dish.id, favorite);
-        expect(response).toBe('The dish has been unfavorited!');
-    });
-
-    it('Should pass when updating the favorited status as true (the dish was already favorited)', async () => {
-        let favorite = true;
-        await favoriteService.setFavoriteStatus(user.id, dish.id, favorite);
-
-        const response = await favoriteService.setFavoriteStatus(user.id, dish.id, favorite);
-        expect(response).toBe('Anything has changed!');
-    });
-
     it('Should pass when updating without an id user', async () => {
-        const favorite = true;
-
         try {
-            await favoriteService.setFavoriteStatus(undefined, dish.id, favorite);
+            await favoriteService.setFavoriteStatus(undefined, dish.id);
             fail('Expected the promise to be rejected.');
         } catch (error) {
             expect(error).toMatchObject({message: 'User not sent!'});
@@ -85,10 +52,8 @@ describe('POST /favorite', () => {
     });
 
     it('Should pass when updating with an invalid id user', async () => {
-        const favorite = true;
-
         try {
-            await favoriteService.setFavoriteStatus(100002, dish.id, favorite);
+            await favoriteService.setFavoriteStatus(100002, dish.id);
             fail('Expected the promise to be rejected.');
         } catch (error) {
             expect(error).toMatchObject({message: 'User not found!'});
@@ -96,14 +61,28 @@ describe('POST /favorite', () => {
     });
 
     it('Should pass when updating with an invalid id dish', async () => {
-        const favorite = true;
-
         try {
-            await favoriteService.setFavoriteStatus(user.id, 100002, favorite);
+            await favoriteService.setFavoriteStatus(user.id, 100002);
             fail('Expected the promise to be rejected.');
         } catch (error) {
             expect(error).toMatchObject({message: 'Dish not found!'});
         }
     });
+
+    it('Should pass when setting a dish as favorite', async () => {
+        const id = await favoriteService.setFavoriteStatus(user.id, dish.id);
+        expect(id).toEqual(expect.any(Number));
+    });
+
+    it('Should pass when removing a dish from the favorite list', async () => {
+        // Set the dish as favorite
+        await favoriteService.setFavoriteStatus(user.id, dish.id);
+    
+        // Remove the dish from the favorite list
+        const result = await favoriteService.setFavoriteStatus(user.id, dish.id);
+    
+        expect(result).toBe(true);
+    })
+    
 
 });

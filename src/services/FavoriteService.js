@@ -26,12 +26,13 @@ class FavoriteService{
         const isFavoriteDish = await this.userRepository.getFavorite(userId, dishId);
 
         if (!isFavoriteDish) {
-            await this.userRepository.addFavorite(userId, dishId);
-            return;
+            const id = await this.userRepository.addFavorite(userId, dishId);
+            return id;
         } 
         else {
-            await this.userRepository.deleteFavorite(userId, dishId);
-            return;
+            const status = await this.userRepository.deleteFavorite(userId, dishId);
+            console.log('status: ', status)
+            return status ?? false;
         }
     }
 
