@@ -229,15 +229,11 @@
                                     },
                                     "dishId": {
                                         "type": "number"
-                                    },
-                                    "favorite": {
-                                        "type": "boolean"
                                     }
                                 },
                                 "required": [
                                     "userId",
-                                    "dishId",
-                                    "favorite"
+                                    "dishId"
                                 ]
                             }
                         }
