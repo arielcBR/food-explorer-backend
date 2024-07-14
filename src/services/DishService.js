@@ -71,7 +71,9 @@ class DishService{
             throw new AppError('Dish not found!', 404);
 
         else{
-            await diskStorage.deleteFile(dish.picture)
+            if(dish.picture !== 'standard_image.png') {
+                await diskStorage.deleteFile(dish.picture)
+            }
 
             const status = await this.dishRepository.deleteDish(id);
             if (!status)
